@@ -4,6 +4,10 @@ _DOTFILES_COMMON_LOADED=1
 
 set -eu
 
+DF_BASE="${HOME}/.dotfiles"
+CONF_BASE="${HOME}/.config"
+SCRIPT_DIR="${DF_BASE}/scripts"
+
 OS="$(uname -s)"
 PKG_CMD=""
 
@@ -94,8 +98,53 @@ link_files() {
             printf 'Moved existing %s to %s\n' "${dest}" "${dest}.bak"
         fi
 
-        # mkdir -p "$(dirname "${dest}")"
-        # ln -s "${src}" "${dest}"
+        mkdir -p "$(dirname "${dest}")"
+        ln -s "${src}" "${dest}"
         printf 'Linked %s -> %s\n' "${dest}" "${src}"
+    done
+}
+
+link_config() {
+    # $1 - folder name (.e.g, nvim) to link from ~/.dotfiles/$1 to ~/.config/$1
+    local name="${1}"
+    local src="${DF_BASE}/${name}"
+    local dest="${CONF_BASE}/${name}"
+
+    printf 'Creating symlink\n  %s → %s\n' "${src}" "${dest}"
+
+    [ -d "${src}" ] || {
+        printf '⤹ Skipping %s (source not found)\n' "${src}"
+        return
+    }
+
+    local target_dir="$(dirname "${dest}")"
+    mkdir -p "${target_dir}" || err "Failed to create ${target_dir} directory"
+
+    if [ -e "${dest}" ] && [ ! -L "${dest}" ]; then
+        # Treating this as an error for now until we gain confidence that it's ok
+        # to show a warning instead.
+        err "${dest} exists (not a symlink) - skipping"
+    fi
+
+    if [ -L "${dest}" ]; then
+        local current="$(readlink "${dest}")" || true
+        [ "${current}" = "${src}" ] && {
+            printf '⤹ %s is already linked – skipping\n' "${dest}"
+            return
+        }
+
+        # Treating this as an error for now until we gain confidence that it's ok
+        # to show a warning instead.
+        err "${dest} exists (points elsewhere) - skipping"
+    fi
+
+    ln -s "${src}" "${dest}" || err "Failed to create symlink for ${name}"
+    printf '  ✓ Linked %s → %s\n' "${dest}" "${src}"
+}
+
+link_configs() {
+    [ "$#" -ge 1 ] || err "link_configs: at least one folder name required"
+    for cfg in "$@"; do
+        link_config "${cfg}"
     done
 }
