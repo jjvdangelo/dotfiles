@@ -1,0 +1,6 @@
+require("core.keymap")
+require("core.set")
+require("core.packer")
+require("core.terminal")
+require("core.multi_grep")
+require("core.signature_help")

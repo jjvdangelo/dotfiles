@@ -105,10 +105,13 @@ link_files() {
 }
 
 link_config() {
-    # $1 - folder name (.e.g, nvim) to link from ~/.dotfiles/$1 to ~/.config/$1
-    local name="${1}"
+    # $1 - destination directory that will be interpreted relative to ${HOME} (e.g., .config → ~/.config)
+    # $2 - folder name (.e.g, nvim)
+    local dest_dir="${1}"
+    local name="${2}"
+
     local src="${DF_BASE}/${name}"
-    local dest="${CONF_BASE}/${name}"
+    local dest="${HOME}${dest_dir:+/${dest_dir}}/${name}"
 
     printf 'Creating symlink\n  %s → %s\n' "${src}" "${dest}"
 
@@ -143,8 +146,11 @@ link_config() {
 }
 
 link_configs() {
+    # $1 - destination directory relative to ${HOME}
+    # remaining args - list of folder names
+    local dest_dir="${1}"; shift
     [ "$#" -ge 1 ] || err "link_configs: at least one folder name required"
     for cfg in "$@"; do
-        link_config "${cfg}"
+        link_config "${dest_dir}" "${cfg}"
     done
 }

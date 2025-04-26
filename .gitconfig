@@ -1,14 +1,31 @@
 [user]
 	email = jjvd@hey.com
-	name = Jim
+	name = Jim D'Angelo
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+
 [push]
 	default = current
+
 [pull]
 	ff = only
+
 [init]
 	defaultBranch = master
+
+[merge]
+    tool = nvimdiff
+    conflictstyle = diff3
+
+[mergetool]
+    prompt = false
+
+[mergetool "nvimdiff"]
+    cmd = nvim -d "$LOCAL" "$BASE" "$REMOTE" "$MERGE" \
+            -c 'wincmd J'
+    trustExitCode = true
+    keepBackup    = false
