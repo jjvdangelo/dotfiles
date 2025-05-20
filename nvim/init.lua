@@ -1,1 +1,4 @@
-require("core")
+require "config.settings"
+require "config.lazy"
+require "config.multigrep"
+require "config.keymap"

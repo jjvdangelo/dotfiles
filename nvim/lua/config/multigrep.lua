@@ -6,7 +6,7 @@ local sorters = require "telescope.sorters"
 
 local M = {}
 
-local live_multigrep = function()
+local function live_multigrep()
     opts = M.opts or {}
     ---@diagnostic disable:undefined-field
     opts.cwd = opts.cwd or vim.uv.cwd()
