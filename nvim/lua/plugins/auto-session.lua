@@ -6,7 +6,10 @@ end
 return {
     {
         "rmagatti/auto-session",
-        dependencies = { "stevearc/overseer.nvim" },
+        dependencies = {
+            "stevearc/overseer.nvim",
+            "nvim-lualine/lualine.nvim",
+        },
 
         lazy = false,
 
@@ -27,7 +30,11 @@ return {
             skip_confirm_for_simple_edits = true,
 
             win_opts = { signcolumn = "yes", cursorcolumn = true, spell = true },
-            post_cwd_changed_cmds = { require "lualine".refresh },
+            post_cwd_changed_cmds = {
+                function(opts)
+                    return require "lualine".refresh(opts)
+                end
+            },
             view_options = { show_hidden = true, case_insensitive = true },
             lsp_file_methods = { autosave_changes = true },
 
@@ -37,19 +44,18 @@ return {
             session_lens = {
                 load_on_setup = true,
                 previewer = true,
-                theme_conf = { border = true, layout_config = { width = 0.8, height = 0.75 } },
+                theme_conf = {
+                    border = true,
+                    layout_config = { width = 0.8, height = 0.75 },
+                },
             },
 
             suppressed_dirs = { "~/", "~/src", "~/Downloads", "/" },
             disable_filetype = { "TelescopePrompt", "vim" },
 
-            show_auto_restore_notif = true,
-
             pre_save_cmds = {
                 function()
-                    local overseer = require "overseer"
-
-                    overseer.save_task_bundle(
+                    require "overseer".save_task_bundle(
                         get_cwd_as_name(),
                         nil,
                         { on_conflict = "overwrite" }
@@ -59,8 +65,7 @@ return {
 
             pre_restore_cmds = {
                 function()
-                    local overseer = require "overseer"
-                    for _, task in ipairs(overseer.list_tasks {}) do
+                    for _, task in ipairs(require "overseer".list_tasks {}) do
                         task:dispose(true)
                     end
                 end,
@@ -68,9 +73,7 @@ return {
 
             post_restore_cmds = {
                 function()
-                    local overseer = require "overseer"
-
-                    overseer.load_task_bundle(
+                    require "overseer".load_task_bundle(
                         get_cwd_as_name(),
                         { ignore_missing = true }
                     )
