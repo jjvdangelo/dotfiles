@@ -40,7 +40,7 @@ return {
             before.attach.dapui_config = open
             before.launch.dapui_config = open
             before.event_terminated.dapui_config = close
-            before.event_existed.dapui_config = close
+            before.event_exited.dapui_config = close
         end,
     },
 }
