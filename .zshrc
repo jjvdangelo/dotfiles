@@ -10,11 +10,14 @@ source "${ZINIT_HOME}/zinit.zsh"
 
 # path
 path_dirs=(
+    "$HOME/go/bin"
     "/usr/local/go/bin"
     "$HOME/.cargo/bin"
 )
 for dir in "${path_dirs[@]}"; do
-    if [[ ":$PATH:" != *":$dir:"* ]]; then
+    if [ ! -d "$dir" ]; then
+        continue
+    elif [[ ":$PATH:" != *":$dir:"* ]]; then
         export PATH="$PATH:$dir"
     fi
 done
@@ -26,8 +29,18 @@ zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
 zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
 
-zinit ice lucid wait; zinit snippet OMZP::git
-zinit ice lucid wait; zinit snippet OMZP::fzf
+zinit ice lucid; zinit snippet OMZP::git
+zinit ice lucid; zinit snippet OMZP::fzf
+
+# pipx
+# eval "$(register-python-argcomplete pipx)"
+# zinit ice lucid; zinit snippet OMZP::pip # could use pip instead /shrug
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+# # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+zinit ice lucid; zinit snippet OMZP::nvm
 
 # history
 HISTSIZE=1000
@@ -76,19 +89,32 @@ alias lta2="eza -lTag --level=2 --icons"
 alias lta3="eza -lTag --level=3 --icons"
 
 # bat
-alias bat="batcat"
-alias cat="bat"
-alias fzf="fzf --preview \"batcat --color=always --style=numbers --line-range=:500 {}\""
-help() {
-    "$@" --help 2>&1 | batcat --plain --language=help
-}
-alias -g -- -h="-h 2>&1 | batcat --language=help --style=plain"
-alias -g -- --help="--help 2>&1 | batcat --language=help --style=plain"
+function config_bat() {
+    local exe_name=$1
+    help() {
+        "$@" --help 2>&1 | ${exe_name} --plain --language=help
+    }
 
-# nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+    if [[ "$exe_name" -ne "bat" ]]; then
+        alias bat="batcat"
+    fi
+
+    alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
+    alias -g -- --help="--help 2>&1 | ${exe_name} --language=help --style=plain"
+    alias fzf="fzf --preview \"${exe_name} --color=always --style=numbers --line-range=:500 {}\""
+    alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
+    alias -g -- --help="--help 2>&1 | ${exe_name} --language=help --style=plain"
+}
+
+if command -v batcat >/dev/null 2>&1; then
+    config_bat "batcat"
+elif command -v bat >/dev/null 2>&1; then
+    config_bat "bat"
+else
+    echo "**** bat is not installed ****"
+fi
+
+alias cat="bat"
 
 # ssh
 eval "$(ssh-agent -s)" >>/dev/null
@@ -102,7 +128,7 @@ zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -al --color $realpath'
 
 # shell integrations
 type starship_zle-keymap-select >/dev/null || {
-    eval "$(starship init zsh)"
+    source <(starship init zsh)
 }
 
 function zvm_config() {
@@ -115,7 +141,7 @@ function zvm_after_init() {
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
     bindkey '^p' history-beginning-search-backward
     bindkey '^n' history-beginning-search-forward
-    bindkey '^ ' autosuggest-accept
+    bindkey '^y' autosuggest-accept
 
     # completions
     autoload -Uz compinit && compinit

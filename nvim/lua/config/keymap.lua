@@ -1,90 +1,56 @@
-local opts = { noremap = true, silent = false }
-local sopts = { noremap = true, silent = true }
-local map = vim.keymap.set
+local m = require "utils.kmap"
 
--- Trying out "oil" for file creation/management
-local oil = require 'oil'
-local function toggle_oil()
-    oil.open_float(nil, { preview = { "vertical" } })
-end
+vim.g.mapleader = " "
 
-map("n", "<leader>e", toggle_oil, sopts)
+m.nmap("<leader>w", vim.cmd.write, "write current buffer to file")
+m.nmap("<leader>qq", ":wqa", "write and quit all")
 
--- map("n", "<leader>e", ":Telescope find_files<cr>", sopts)
-map("n", "<leader>w", vim.cmd.write, sopts)
-map("n", "<leader>qq", ":wqa", sopts)
+-- movement
+m.nmap("H", "g^", "move to the end of the current line")
+m.nmap("L", "g$", "move to the start of the current line")
+m.nmap("j", "gj", "move up a line")
+m.nmap("k", "gk", "move down a line")
 
-map("n", "H", "g^", sopts)
-map("n", "L", "g$", sopts)
-map("n", "j", "gj", sopts)
-map("n", "k", "gk", sopts)
+-- navigation
+m.nmap("<C-h>", "<C-w><C-h>", "navigate to window, left")
+m.nmap("<C-j>", "<C-w><C-j>", "navigate to window, down")
+m.nmap("<C-k>", "<C-w><C-k>", "navigate to window, up")
+m.nmap("<C-l>", "<C-w><C-l>", "navigate to window, right")
 
-map("n", "<C-j>", "<C-w><C-j>", sopts)
-map("n", "<C-k>", "<C-w><C-k>", sopts)
-map("n", "<C-h>", "<C-w><C-h>", sopts)
-map("n", "<C-l>", "<C-w><C-l>", sopts)
+m.nmap("<C-Left>", ":tabp<cr>", "navigate to previous tab")
+m.nmap("<C-Right>", ":tabn<cr>", "navigate to next tab")
 
-map("n", "<leader><leader>", "<C-^>", sopts)
-map("n", "<silent><Right>", ":bn<cr>", sopts)
-
-map("n", "<Left>", ":bprev<cr>", sopts)
-map("n", "<Right>", ":bnext<cr>", sopts)
-
-map("n", "<leader>bd", ":%bd|e#<cr>", opts)
+m.nmap("<leader><leader>", "<C-^>", "swap to previous buffer in current window")
+m.nmap("<Right>", ":bn<cr>", "show next buffer in current window")
+m.nmap("<Left>", ":bprev<cr>", "show previous buffer in the current window")
 
 -- debugging
-map("n", "<F8>", ":cnext<cr>", sopts)
-map("n", "<F20>", ":cprev<cr>", sopts)
+m.nmap("<F8>", ":cnext<cr>", "go to next error")
+m.nmap("<F20>", ":cprev<cr>", "go to previous error")
 
 -- move lines up and down
-map("n", "<A-j>", ":m .+1<cr>==", sopts)
-map("n", "<A-k>", ":m .-2<cr>==", sopts)
+local nv = { "n", "v" }
+m.map(nv, "<A-j>", ":m .+1<cr>==", "move current line up")
+m.map(nv, "<A-k>", ":m .-2<cr>==", "move current line down")
 
 -- move visual selection up and down
-map("v", "<A-j>", ":m '>+1<cr>gv=gv")
-map("v", "<A-k>", ":m '>-2<cr>gv=gv")
+m.vmap("<A-j>", ":m '>+1<cr>gv=gv", "move visual selection down a line")
+m.vmap("<A-k>", ":m '>-2<cr>gv=gv", "move visual selection up a line")
 
 -- easy transition back into normal mode
-map("i", "jj", "<esc>", opts)
+m.imap("jj", "<C-[>", "shortcut for <esc> or <C-[>")
 
-map("t", "<C-j>", "<C-\\><C-n><C-w><C-j>", opts)
-map("t", "<C-k>", "<C-\\><C-n><C-w><C-k>", opts)
-map("t", "<C-h>", "<C-\\><C-n><C-w><C-h>", opts)
-map("t", "<C-l>", "<C-\\><C-n><C-w><C-l>", opts)
-map("t", "<Esc><Esc>", "<C-\\><C-n>", opts)
-map("t", "jj", "<C-\\><C-n>", opts)
+-- move windows while in terminal mode
+m.tmap("<C-h>", "<C-\\><C-n><C-w><C-h>", "move to next window, left")
+m.tmap("<C-j>", "<C-\\><C-n><C-w><C-j>", "move to next window, below")
+m.tmap("<C-k>", "<C-\\><C-n><C-w><C-k>", "move to next window, up")
+m.tmap("<C-l>", "<C-\\><C-n><C-w><C-l>", "move to next window, right")
+m.tmap("<Esc><Esc>", "<C-\\><C-n>", "enter normal mode")
 
-map({ "n", "t" }, "<leader>tt", ":FloatingTerm Terminal-0 Terminal<cr>", sopts)
-map({ "n", "t" }, "<leader>11", ":FloatingTerm Terminal-1 Terminal-1<cr>", sopts)
-map({ "n", "t" }, "<leader>22", ":FloatingTerm Terminal-2 Terminal-2<cr>", sopts)
-map({ "n", "t" }, "<leader>33", ":FloatingTerm Terminal-3 Terminal-3<cr>", sopts)
-map({ "n", "t" }, "<leader>44", ":FloatingTerm Terminal-4 Terminal-4<cr>", sopts)
-map({ "n", "t" }, "<leader>55", ":FloatingTerm Terminal-5 Terminal-5<cr>", sopts)
-map({ "n", "t" }, "<leader>66", ":FloatingTerm Terminal-6 Terminal-6<cr>", sopts)
+m.tmap("jj", "<C-\\><C-n>", "enter normal mode")
 
-local function toggle_colorcolumn()
-    local colorcolumn = vim.opt.colorcolumn:get()
-    local new_value = ""
-
-    if #colorcolumn == 0 or colorcolumn[1] == "" then
-        new_value = '100'
-    end
-
-    for _, win in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
-        vim.api.nvim_set_option_value("colorcolumn", new_value, { win = win })
-    end
-end
-map("n", "<leader>cc", toggle_colorcolumn, opts)
-
-local function toggle_hlsearch()
-    ---@diagnostic disable:undefined-field
-    vim.opt.hlsearch = not vim.opt.hlsearch:get()
-end
-map("n", "<leader>h", toggle_hlsearch, opts)
-
-local function hsplit_keep_buffer()
-    local buf = vim.api.nvim_get_current_buf()
-    vim.cmd("new")
-    vim.api.nvim_win_set_buf(0, buf)
-end
-map("n", "<C-w>n", hsplit_keep_buffer, sopts)
+-- utility
+m.nmap("<leader>cc", require "utils.cc".toggle, "toggle colorcolumn")
+m.nmap("<leader>h", require "utils.hlsearch".toggle, "toggle hlsearch")
+m.nmap("<C-w>n", require "utils.hsplit".keep_buffer, "create vertical split, keeping current buffer")
+m.nmap("<leader>bd", require "utils.buffers".kill_others, "destroy all buffers except the one in the current window")

@@ -26,66 +26,62 @@ return {
                 "gopls", "html", "htmx", "lua_ls", "postgres_lsp",
                 "rust_analyzer", "templ", "ts_ls", "zls",
             },
+            automatic_enable = true,
         },
     },
 
     {
         "L3MON4D3/LuaSnip",
-        dependencies = {
-            { "saadparwaiz1/cmp_luasnip" },
-            { "rafamadriz/friendly-snippets" },
-        },
+        version = "v2.*",
+        dependencies = { "saadparwaiz1/cmp_luasnip", "rafamadriz/friendly-snippets" },
 
-        init = function ()
-            require "luasnip"
+        build = "make install_jsregexp",
+
+        init = function()
             require "luasnip.loaders.from_vscode".lazy_load()
         end,
     },
 
     {
         "hrsh7th/nvim-cmp",
-        event = "InsertEnter",
-
-        dependencies = {
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "L3MON4D3/LuaSnip" }
-        },
+        dependencies = { "hrsh7th/cmp-nvim-lsp", "L3MON4D3/LuaSnip" },
 
         config = function()
-            local cmp = require "cmp"
+            local cmp, lsnip = require "cmp", require "luasnip"
             local s_beh = cmp.SelectBehavior.Select
-            local cfg = { behavior = s_beh }
-            local select_conf = { select = true, behavior = s_beh }
-            local border = cmp.config.window.bordered("rounded")
+            local confirm_conf = { select = true, behavior = cmp.SelectBehavior.Insert }
+
+            local function expand_snippet(args)
+                lsnip.lsp_expand(args.body)
+            end
 
             cmp.setup {
-                snippet = {
-                    expand = function (args)
-                        require "luasnip".lsp_expand(args.body)
-                    end,
-                },
+                snippet = { expand = expand_snippet },
 
                 window = {
-                    completion = border, documentation = border,
+                    completion = cmp.config.window.bordered("rounded"),
+                    documentation = cmp.config.window.bordered("rounded"),
                 },
 
                 mapping = cmp.mapping.preset.insert({
-                    ["<C-n>"] = cmp.mapping.select_next_item(cfg),
-                    ["<C-p>"] = cmp.mapping.select_prev_item(cfg),
-                    ["<C-y>"] = cmp.mapping.confirm(select_conf),
-                    ["<C-.>"] = cmp.mapping.open_docs(),
+                    ["<C-n>"] = cmp.mapping.select_next_item({ behavior = s_beh }),
+                    ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = s_beh }),
+                    ["<C-y>"] = cmp.mapping.confirm(confirm_conf),
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-d>"] = cmp.mapping.scroll_docs(-4),
                     ["<C-e>"] = cmp.mapping.abort(),
                     ["<esc>"] = cmp.mapping.close(),
+
+                    -- Visual Studio keybindings
+                    ["<C-space>"] = cmp.mapping.confirm(confirm_conf),
                 }),
 
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
-                }, {
-                    { name = "path" },
+                    { name = "vim-dadbod-completion" },
                     { name = "buffer" },
+                    { name = "path" },
                 }),
             }
         end,
@@ -93,14 +89,12 @@ return {
 
     {
         "neovim/nvim-lspconfig",
-        dependencies = {
-            { "hrsh7th/cmp-nvim-lsp" },
-            { "hrsh7th/nvim-cmp" },
-        },
+        dependencies = { "hrsh7th/cmp-nvim-lsp", "hrsh7th/nvim-cmp" },
 
         init = function()
             vim.diagnostic.config {
                 virtual_text = true,
+                underline = true,
                 float = { border = "rounded" },
             }
         end,

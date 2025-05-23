@@ -1,29 +1,17 @@
-local cmp = require "cmp_nvim_lsp"
+return require "config.lsp-help".wrap_settings {
+    Lua = {
+        runtime = { version = "LuaJIT" },
 
-local caps = vim.tbl_deep_extend(
-    "force",
-    vim.lsp.protocol.make_client_capabilities(),
-    cmp.default_capabilities()
-)
+        workspace = {
+            checkThirdParty = false,
 
-return {
-    settings = {
-        capabilities = caps,
-
-        Lua = {
-            runtime = { version = "LuaJIT" },
-
-            workspace = {
-                checkThirdParty = false,
-
-                library = {
-                    vim.env.VIMRUNTIME,
-                    vim.fn.stdpath("config"),
-                },
+            library = {
+                vim.env.VIMRUNTIME,
+                vim.fn.stdpath("config"),
             },
-
-            diagnostics = { globals = { "vim" } },
-            telemetry = { enable = false },
         },
+
+        diagnostics = { globals = { "vim" } },
+        telemetry = { enable = false },
     },
 }

@@ -1,5 +1,10 @@
 return {
     {
+        "nvim-telescope/telescope-ui-select.nvim",
+        opts = { overseer = { enabled = true } },
+    },
+
+    {
         "nvim-telescope/telescope.nvim",
         branch = "0.1.x",
         dependencies = {
@@ -7,10 +12,7 @@ return {
             "jonarrien/telescope-cmdline.nvim",
             "nvim-telescope/telescope-fzf-native.nvim",
             "nvim-telescope/telescope-dap.nvim",
-            {
-                "nvim-telescope/telescope-ui-select.nvim",
-                opts = { overseer = { enabled = true } },
-            },
+            "nvim-telescope/telescope-ui-select.nvim",
         },
 
         keys = {
@@ -19,11 +21,39 @@ return {
 
         config = function()
             local ts = require "telescope"
-            ts.setup {
-                extensions = {
-                    ["ui-select"] = { require "telescope.themes".get_dropdown {} },
+            local ta = require "telescope.actions"
 
-                    cmdline = {
+            ts.setup {
+                pickers = {
+                    buffers = {
+                        mappings = {
+                            i = {
+                                ["<C-d>"] = ta.delete_buffer,
+                            },
+                        },
+                    },
+                },
+
+                defaults = {
+                    dynamic_preview_title = true,
+                    vimgrep_arguments = {
+                        "rg",
+                        "--color=never",
+                        "--no-heading",
+                        "--with-filename",
+                        "--line-number",
+                        "--column",
+                        "--smart-case",
+                        "--trim",
+                    },
+                },
+
+                extensions = {
+                    ["ui-select"] = {
+                        require "telescope.themes".get_dropdown {},
+                    },
+
+                    ["cmdline"] = {
                         mappings = {
                             complete = "<tab>",
                             run_selection = "<c-cr>",

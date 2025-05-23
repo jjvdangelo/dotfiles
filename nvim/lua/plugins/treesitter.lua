@@ -36,27 +36,4 @@ return {
             vim.filetype.add { extensions = { templ = "templ" } }
         end,
     },
-
-    {
-        "MeanderingProgrammer/render-markdown.nvim",
-        dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
-        opts = {
-            injections = {
-                gitcommit = {
-                    enabled = true,
-                    query = [[
-                        ((message) @injection.content
-                            (#set! injection.combined)
-                            (#set! injection.include-children)
-                            (#set! injection.language "markdown"))
-                    ]],
-                }
-            },
-
-            anti_conceal = {
-                enabled = true,
-                ignore = { code_background = true, sign = true },
-            },
-        },
-    },
 }

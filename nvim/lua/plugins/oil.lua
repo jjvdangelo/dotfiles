@@ -3,11 +3,9 @@ local function t() return true end
 return {
     {
         "stevearc/oil.nvim",
+        dependencies = { "nvim-tree/nvim-web-devicons", opts = {} },
+        lazy = false,
 
-        cmd = "Oil",
-
-        ---@module "oil"
-        ---@type oil.SetupOpts
         opts = {
             view_options = { show_hidden = true },
             constrain_cursor = "editable",
@@ -22,8 +20,19 @@ return {
             watch_for_changes = true,
         },
 
-        dependencies = { "nvim-tree/nvim-web-devicons", opts = {} },
+        init = function()
+            local oil = require "oil"
+            local function toggle()
+                oil.open_float(nil, { preview = { "vertical" } })
+            end
 
-        lazy = false,
+            local m = require "utils.kmap"
+            m.nmap("-", toggle, "toggle oil")
+
+            local function oil_open_float()
+                oil.open_float(nil, { preview = { "vertical" } })
+            end
+            m.nmap("<leader>e", oil_open_float, "open oil float")
+        end,
     }
 }
