@@ -1,25 +1,22 @@
 # zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
-if [ ! -d "$ZINIT_HOME" ]; then
-    mkdir -p "$(dirname $ZINIT_HOME)"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+if [ ! -d "${ZINIT_HOME}" ]; then
+    mkdir -p "$(dirname ${ZINIT_HOME})"
+    git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT_HOME}"
 fi
 
 source "${ZINIT_HOME}/zinit.zsh"
 
 # path
-path_dirs=(
-    "$HOME/go/bin"
+typeset -a path_dirs=(
+    "/opt/homebrew/bin"
     "/usr/local/go/bin"
-    "$HOME/.cargo/bin"
+    "${HOME}/go/bin"
+    "${HOME}/.cargo/bin"
 )
 for dir in "${path_dirs[@]}"; do
-    if [ ! -d "$dir" ]; then
-        continue
-    elif [[ ":$PATH:" != *":$dir:"* ]]; then
-        export PATH="$PATH:$dir"
-    fi
+    [[ -d "${dir}" && ":${PATH}:" != *":${dir}:"* ]] && PATH="${PATH}:${dir}"
 done
 
 # plugins
@@ -37,15 +34,15 @@ zinit ice lucid; zinit snippet OMZP::fzf
 # zinit ice lucid; zinit snippet OMZP::pip # could use pip instead /shrug
 
 # nvm
-export NVM_DIR="$HOME/.nvm"
-# # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+export NVM_DIR="${HOME}/.nvm"
+# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 zinit ice lucid; zinit snippet OMZP::nvm
 
 # history
 HISTSIZE=1000
 HISTFILE=~/.cache/zsh/.zsh_history
-SAVEHIST=$HISTSIZE
+SAVEHIST=${HISTSIZE}
 HISTDUP=erase
 
 setopt appendhistory
@@ -65,7 +62,7 @@ unsetopt BEEP
 ## match on dot files without having to specify the .
 setopt globdots 
 ## move the default zcompdumps
-export ZSH_COMPDUMP=~/.cache/zsh/.zcompdump-$HOST
+export ZSH_COMPDUMP=~/.cache/zsh/.zcompdump-${HOST}
 
 # docker helpers
 alias dup="docker compose up -d"
@@ -90,31 +87,17 @@ alias lta3="eza -lTag --level=3 --icons"
 
 # bat
 function config_bat() {
-    local exe_name=$1
-    help() {
-        "$@" --help 2>&1 | ${exe_name} --plain --language=help
-    }
-
-    if [[ "$exe_name" -ne "bat" ]]; then
-        alias bat="batcat"
-    fi
+    typeset exe_name="${${commands[batcat]:-}:+batcat}${${commands[bat]:-}:+bat}"
+    [[ -z "${exe_name}" ]] && { echo "**** bat is not installed ****" &>2; return }
+    [[ "${exe_name}" != "bat" ]] && { alias bat="batcat" }
 
     alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
     alias -g -- --help="--help 2>&1 | ${exe_name} --language=help --style=plain"
     alias fzf="fzf --preview \"${exe_name} --color=always --style=numbers --line-range=:500 {}\""
-    alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
-    alias -g -- --help="--help 2>&1 | ${exe_name} --language=help --style=plain"
+    alias cat="${exe_name}"
 }
+config_bat
 
-if command -v batcat >/dev/null 2>&1; then
-    config_bat "batcat"
-elif command -v bat >/dev/null 2>&1; then
-    config_bat "bat"
-else
-    echo "**** bat is not installed ****"
-fi
-
-alias cat="bat"
 
 # ssh
 eval "$(ssh-agent -s)" >>/dev/null
@@ -132,7 +115,7 @@ type starship_zle-keymap-select >/dev/null || {
 }
 
 function zvm_config() {
-    ZVM_LINE_INIT_MODE=$ZVM_MODE_INSERT
+    ZVM_LINE_INIT_MODE=${ZVM_MODE_INSERT}
     ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
 }
 
@@ -149,14 +132,14 @@ function zvm_after_init() {
     zinit cdreplay -q
 }
 
-__set_title() {
-    case "$TERM" in
+function __set_title() {
+    case "${TERM}" in
         linux|dumb) return ;;
     esac
 
-    local title="$1"
+    local title="${1}"
 
-    if [[ -n "$TMUX" ]]; then
+    if [[ -n "${TMUX}" ]]; then
         printf '\033Ptmux;\033\033]0;%s\007\033\\' "${title}"
     else
         printf '\033]0;%s\007' "${title}"
