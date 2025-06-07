@@ -1,10 +1,50 @@
 "$schema" = 'https://starship.rs/config-schema.json'
-palette = 'catppuccin_frappe'
-format = """$username$hostname $directory$git_branch$git_status$character"""
+
+palette = 'catppuccin_mocha'
+format = """\
+$username$hostname \
+$os\
+$directory\
+[](bg:prev_bg fg:base)\
+$git_branch$git_status\
+$character"""
+right_format = """$git_state$git_metrics"""
+
+[username]
+show_always = true
+format = '[](bg:prev_bg fg:base)[$user]($style)'
+style_user = 'fg:blue bg:base'
+style_root = 'fg:red bg:base'
+
+[hostname]
+ssh_only = false
+style = 'fg:prev_fg bg:prev_bg'
+format = '[(@$hostname)]($style)'
 
 [os]
 disabled = false
-format = """[$symbol]($style) $name"""
+style = "bg:surface0 fg:text"
+format = '[](bg:prev_bg fg:surface0)[$symbol]($style)'
+
+[directory]
+style = "bg:sapphire fg:mantle"
+read_only = " "
+truncation_length = 3
+truncation_symbol = "󰇘/"
+format = '[](bg:prev_bg fg:sapphire)[ $path ]($style)'
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:green)'
+error_symbol = '[](bold fg:red)'
+vimcmd_symbol = '[](bold fg:green)'
+vimcmd_replace_one_symbol = '[](bold fg:lavender)'
+vimcmd_replace_symbol = '[](bold fg:lavender)'
+vimcmd_visual_symbol = '[](bold fg:yellow)'
+
+[git_branch]
+style = "bold lavender"
+format = '[ $symbol$branch(:$remote_branch) ]($style)'
 
 [os.symbols]
 Windows = ""
@@ -26,31 +66,6 @@ CentOS = ""
 Debian = "󰣚"
 Redhat = "󱄛"
 RedHatEnterprise = "󱄛"
-
-[username]
-show_always = true
-format = '[$user]($style)'
-style_user = 'blue'
-
-[hostname]
-format = '[@$hostname]($style)'
-
-[time]
-disabled = false
-time_format = "%R %Y %m %d"
-format = '[  $time ]($style)'
-
-[line_break]
-disabled = false
-
-[character]
-disabled = false
-success_symbol = '[❯](bold fg:green)'
-error_symbol = '[❯](bold fg:red)'
-vimcmd_symbol = '[❮](bold fg:green)'
-vimcmd_replace_one_symbol = '[❮](bold fg:lavender)'
-vimcmd_replace_symbol = '[❮](bold fg:lavender)'
-vimcmd_visual_symbol = '[❮](bold fg:yellow)'
 
 [palettes.catppuccin_frappe]
 rosewater = "#f2d5cf"

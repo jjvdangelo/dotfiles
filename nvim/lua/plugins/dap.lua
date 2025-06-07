@@ -1,5 +1,3 @@
-local m = require "utils.kmap"
-
 return {
     {
         "mfussenegger/nvim-dap",
@@ -9,7 +7,9 @@ return {
             "nvim-neotest/nvim-nio",
         },
 
-        init = function()
+        config = function()
+            local m = require "utils.kmap"
+
             local dap, dapui = require "dap", require "dapui"
             local before = dap.listeners.before
 

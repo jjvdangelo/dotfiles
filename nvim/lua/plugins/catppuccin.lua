@@ -8,13 +8,18 @@ return {
         priority = 1000,
 
         opts = {
-            flavour = "frappe",
+            flavour = "auto",
 
             no_italic = true,
             term_colors = true,
             show_end_of_buffer = true,
             transparent_background = true,
-            background = { light = "latte", dark = "frappe" },
+            background = { light = "latte", dark = "mocha" },
+
+            dim_inactive = {
+                enabled = true,
+                percentage = 0.45,
+            },
 
             integrations = {
                 fzf = true,
@@ -49,14 +54,17 @@ return {
             },
         },
 
-        init = function()
-            vim.cmd "highlight clear"
-            vim.cmd "syntax reset"
-
+        config = function(_, opts)
             vim.o.termguicolors = true
             vim.o.background = "dark"
 
-            vim.cmd.colorscheme "catppuccin-frappe"
+            vim.cmd "highlight clear"
+            vim.cmd "syntax reset"
+
+            opts.dim_inactive.shade = vim.o.background
+
+            require "catppuccin".setup(opts)
+            vim.cmd.colorscheme "catppuccin"
         end,
     },
 }

@@ -37,14 +37,18 @@ return {
 
         build = "make install_jsregexp",
 
-        init = function()
+        config = function()
             require "luasnip.loaders.from_vscode".lazy_load()
         end,
     },
 
     {
         "hrsh7th/nvim-cmp",
-        dependencies = { "hrsh7th/cmp-nvim-lsp", "L3MON4D3/LuaSnip" },
+        dependencies = {
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-cmdline",
+            "L3MON4D3/LuaSnip",
+        },
 
         config = function()
             local cmp, lsnip = require "cmp", require "luasnip"
@@ -84,6 +88,20 @@ return {
                     { name = "path" },
                 }),
             }
+
+            cmp.setup.cmdline({ "/", "?" }, {
+                mapping = cmp.mapping.preset.cmdline(),
+                source = { { "buffer" } },
+            })
+
+            cmp.setup.cmdline(":", {
+                mapping = cmp.mapping.preset.cmdline(),
+                sources = cmp.config.sources({
+                    { name = "path" },
+                }, {
+                    { name = "cmdline" },
+                })
+            })
         end,
     },
 
@@ -91,7 +109,15 @@ return {
         "neovim/nvim-lspconfig",
         dependencies = { "hrsh7th/cmp-nvim-lsp", "hrsh7th/nvim-cmp" },
 
-        init = function()
+        config = function()
+            vim.keymap.set("n", "<leader>dt", function()
+                if vim.diagnostic.is_enabled() then
+                    vim.diagnostic.enable(false)
+                else
+                    vim.diagnostic.enable()
+                end
+            end, { silent = true })
+
             vim.diagnostic.config {
                 virtual_text = true,
                 underline = true,

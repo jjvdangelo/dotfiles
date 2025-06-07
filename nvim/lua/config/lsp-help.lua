@@ -1,9 +1,9 @@
 local M = {}
 
 local m = require "utils.kmap"
+local au = require "utils.au"
 local cmp = require "cmp_nvim_lsp"
 local builtin = require "telescope.builtin"
-local au = require "utils.cmds"
 
 local buf = vim.lsp.buf
 
@@ -22,6 +22,10 @@ local lsp_declarations = wrap(builtin.lsp_declarations)
 local lsp_implementations = wrap(builtin.lsp_implementations)
 local live_grep = wrap(builtin.live_grep)
 
+local function hover()
+    vim.lsp.buf.hover { border = "rounded" }
+end
+
 local function on_attach(_, bufnr)
     au.group("Format", function(autocmd)
         autocmd("BufWritePre", {
@@ -37,7 +41,7 @@ local function on_attach(_, bufnr)
     m.nmap("gD", lsp_declarations, "goto declaration(s)", opts)
     m.nmap("gi", lsp_implementations, "goto implementation(s)", opts)
     m.nmap("gr", lsp_references, "find references", opts)
-    m.nmap("K", vim.lsp.buf.hover, "hover info", opts)
+    m.nmap("K", hover, "hover info", opts)
     m.nmap("grn", vim.lsp.buf.rename, "rename", opts)
     m.map({ "n", "i", "v" }, "<C-w>d", vim.diagnostic.open_float, "open float", opts)
 
