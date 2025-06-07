@@ -29,6 +29,9 @@ zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
 zinit ice lucid; zinit snippet OMZP::git
 zinit ice lucid; zinit snippet OMZP::fzf
 
+# keeper
+export SSH_AUTH_SOCK=${HOME}/.keeper/jjvd@hey.com.ssh_agent
+
 # pipx
 # eval "$(register-python-argcomplete pipx)"
 # zinit ice lucid; zinit snippet OMZP::pip # could use pip instead /shrug
