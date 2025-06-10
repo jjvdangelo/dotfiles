@@ -103,7 +103,15 @@ config_bat
 
 
 # ssh
-eval "$(ssh-agent -s)" >>/dev/null
+# if command -v keeper >/dev/null 2>&1; then
+#     if ! keeper ssh-agent info >/dev/null 2>&1; then
+#         keeper ssh-agent start
+#     fi
+# fi
+# export SSH_AUTH_SOCK="${HOME}/.keeper/ssh-agent.sock"
+# export SSH_AUTH_SOCK="${HOME}/.keeper/jjvd@hey.com.ssh_agent"
+# eval "$(ssh-agent -s)" >>/dev/null
+export SSH_AUTH_SOCK="${HOME}/.keeper/jjvd@hey.com.ssh_agent"
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
@@ -113,10 +121,6 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -al --color $realpath'
 zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls -al --color $realpath'
 
 # shell integrations
-type starship_zle-keymap-select >/dev/null || {
-    source <(starship init zsh)
-}
-
 function zvm_config() {
     ZVM_LINE_INIT_MODE=${ZVM_MODE_INSERT}
     ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
@@ -136,18 +140,20 @@ function zvm_after_init() {
 }
 
 function __set_title() {
-    case "${TERM}" in
-        linux|dumb) return ;;
-    esac
-
-    local title="${1}"
-
-    if [[ -n "${TMUX}" ]]; then
-        printf '\033Ptmux;\033\033]0;%s\007\033\\' "${title}"
-    else
-        printf '\033]0;%s\007' "${title}"
-    fi
+    typeset title="${1}"
+    echo -ne "\033]0; ${title} \007"
 }
 
-preexec() { __set_title "${1%% *}" ; }
-precmd() { __set_title "${PWD/#$HOME/~}" ; }
+function __set_title_precmd() {
+    __set_title "$(basename "$PWD")"
+}
+
+function __set_title_preexec() {
+    typeset cmd=${1%% *}
+    __set_title "$cmd"
+}
+
+precmd_functions+=(__set_title_precmd)
+preexec_functions+=(__set_title_preexec)
+
+type starship_zle-keymap-select >/dev/null || source <(starship init zsh)

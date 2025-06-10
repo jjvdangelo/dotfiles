@@ -2,19 +2,20 @@
 
 palette = 'catppuccin_mocha'
 format = """\
-$username$hostname \
+$username$hostname\
 $os\
 $directory\
 [](bg:prev_bg fg:base)\
 $git_branch$git_status\
 $character"""
 right_format = """$git_state$git_metrics"""
+continuation_prompt = '󰄾 '
 
 [username]
 show_always = true
-format = '[](bg:prev_bg fg:base)[$user]($style)'
-style_user = 'fg:blue bg:base'
-style_root = 'fg:red bg:base'
+format = '[](sapphire)[$user]($style)'
+style_user = 'fg:mantle bg:sapphire'
+style_root = 'fg:red bg:sapphire'
 
 [hostname]
 ssh_only = false
@@ -27,11 +28,11 @@ style = "bg:surface0 fg:text"
 format = '[](bg:prev_bg fg:surface0)[$symbol]($style)'
 
 [directory]
-style = "bg:sapphire fg:mantle"
+style = "bg:peach fg:mantle"
 read_only = " "
 truncation_length = 3
 truncation_symbol = "󰇘/"
-format = '[](bg:prev_bg fg:sapphire)[ $path ]($style)'
+format = '[](bg:prev_bg fg:peach)[ $path ]($style)'
 
 [character]
 disabled = false
