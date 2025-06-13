@@ -94,7 +94,7 @@ function config_bat() {
     [[ -z "${exe_name}" ]] && { echo "**** bat is not installed ****" &>2; return }
     [[ "${exe_name}" != "bat" ]] && { alias bat="batcat" }
 
-    alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
+    # alias -g -- -h="-h 2>&1 | ${exe_name} --language=help --style=plain"
     alias -g -- --help="--help 2>&1 | ${exe_name} --language=help --style=plain"
     alias fzf="fzf --preview \"${exe_name} --color=always --style=numbers --line-range=:500 {}\""
     alias cat="${exe_name}"
