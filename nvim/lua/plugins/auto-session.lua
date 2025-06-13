@@ -52,61 +52,10 @@ return {
 
             suppressed_dirs = { "~/", "~/src", "~/Downloads", "/" },
             disable_filetype = { "TelescopePrompt", "vim" },
-
-            pre_save_cmds = {
-                function()
-                    require "overseer".save_task_bundle(
-                        get_cwd_as_name(),
-                        nil,
-                        { on_conflict = "overwrite" }
-                    )
-                end,
-            },
-
-            pre_restore_cmds = {
-                function()
-                    for _, task in ipairs(require "overseer".list_tasks {}) do
-                        task:dispose(true)
-                    end
-                end,
-            },
-
-            post_restore_cmds = {
-                function()
-                    require "overseer".load_task_bundle(
-                        get_cwd_as_name(),
-                        { ignore_missing = true }
-                    )
-                end,
-            },
         },
 
         init = function()
             vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
-
-            vim.api.nvim_create_autocmd("VimEnter", {
-                once = true,
-                callback = function()
-                    if vim.fn.empty(vim.v.this_session) == 1 then
-                        if vim.fn.argc() == 1 and vim.fn.isdirectory(vim.fn.argv(0)) == 1 then
-                            require "oil".open_float()
-                        end
-                    end
-                end,
-            })
-        end,
-
-        args_allow_files_auto_save = function()
-            local supported = 0
-            local bufs = vim.api.nvim_list_bufs()
-            for _, buf in ipairs(bufs) do
-                if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
-                    local path = vim.api.nvim_buf_get_name(buf)
-                    if vim.fn.filereadable(path) ~= 0 then supported = supported + 1 end
-                end
-            end
-
-            return supported >= 2
         end,
     },
 }
