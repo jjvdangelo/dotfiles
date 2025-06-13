@@ -136,7 +136,7 @@ function zvm_after_init() {
     autoload -Uz compinit && compinit
 
     zinit cdreplay -q
-    eval "$(zoxide init --cmd cd --no-cmd zsh)"
+    eval "$(zoxide init --cmd cd zsh)"
 }
 
 function __set_title() {
