@@ -5,6 +5,8 @@ g.has_gui = vim.fn.has('gui_running') == 1
 g.has_display = g.has_ui and vim.env.DISPLAY ~= nil
 g.has_nf = vim.env.TERM ~= 'linux' and vim.env.NVIM_NF and true or false
 
+g.loaded_perl_provider = 0
+g.loaded_ruby_provider = 0
 
 local o = vim.opt
 
