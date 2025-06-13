@@ -127,7 +127,6 @@ function zvm_config() {
 }
 
 function zvm_after_init() {
-    eval "$(zoxide init --cmd cd zsh)"
     [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
     bindkey '^p' history-beginning-search-backward
     bindkey '^n' history-beginning-search-forward
@@ -137,6 +136,7 @@ function zvm_after_init() {
     autoload -Uz compinit && compinit
 
     zinit cdreplay -q
+    eval "$(zoxide init --cmd cd --no-cmd zsh)"
 }
 
 function __set_title() {
