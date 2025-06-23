@@ -29,9 +29,6 @@ zinit ice depth=1; zinit light jeffreytse/zsh-vi-mode
 zinit ice lucid; zinit snippet OMZP::git
 zinit ice lucid; zinit snippet OMZP::fzf
 
-# keeper
-export SSH_AUTH_SOCK=${HOME}/.keeper/jjvd@hey.com.ssh_agent
-
 # pipx
 # eval "$(register-python-argcomplete pipx)"
 # zinit ice lucid; zinit snippet OMZP::pip # could use pip instead /shrug
@@ -101,17 +98,8 @@ function config_bat() {
 }
 config_bat
 
-
 # ssh
-# if command -v keeper >/dev/null 2>&1; then
-#     if ! keeper ssh-agent info >/dev/null 2>&1; then
-#         keeper ssh-agent start
-#     fi
-# fi
-# export SSH_AUTH_SOCK="${HOME}/.keeper/ssh-agent.sock"
-# export SSH_AUTH_SOCK="${HOME}/.keeper/jjvd@hey.com.ssh_agent"
-# eval "$(ssh-agent -s)" >>/dev/null
-export SSH_AUTH_SOCK="${HOME}/.keeper/jjvd@hey.com.ssh_agent"
+eval "$(ssh-agent -s)" >>/dev/null
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
