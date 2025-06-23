@@ -98,8 +98,9 @@ function config_bat() {
 }
 config_bat
 
-# ssh
+# ssh & gpg
 eval "$(ssh-agent -s)" >>/dev/null
+export GPG_TTY=$TTY
 
 # completion styling
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'

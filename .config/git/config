@@ -1,6 +1,7 @@
 [user]
 	email = jjvd@hey.com
 	name = Jim D'Angelo
+	signingkey = 9ED809B384362C8E
 
 [core]
 	editor = nvim
@@ -29,3 +30,7 @@
             -c 'wincmd J'
     trustExitCode = true
     keepBackup    = false
+[commit]
+	gpgsign = true
+[tag]
+	gpgSign = true
