@@ -2,6 +2,9 @@
 	email = jjvd@hey.com
 	name = Jim D'Angelo
 
+[core]
+	editor = nvim
+
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
@@ -10,9 +13,6 @@
 
 [push]
 	default = current
-
-[pull]
-	ff = only
 
 [init]
 	defaultBranch = master
