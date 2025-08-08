@@ -1,4 +1,5 @@
 # .dotfiles/lib/common.sh  (POSIX-compliant; guarded against double-load)
+# shellcheck shell=sh
 [ -n "${_DOTFILES_COMMON_LOADED+x}" ] && return
 _DOTFILES_COMMON_LOADED=1
 
@@ -94,13 +95,20 @@ link_files() {
         fi
 
         if [ -L "${dest}" ] || [ -e "${dest}" ]; then
-            # mv "${dest}" "${dest}.bak"
-            printf 'Moved existing %s to %s\n' "${dest}" "${dest}.bak"
+            if mv "${dest}" "${dest}.bak"; then
+                printf 'Moved existing %s to %s\n' "${dest}" "${dest}.bak"
+            else
+                printf 'Failed to move %s to %s; skipping\n' "${dest}" "${dest}.bak" >&2
+                continue
+            fi
         fi
 
         mkdir -p "$(dirname "${dest}")"
-        ln -s "${src}" "${dest}"
-        printf 'Linked %s -> %s\n' "${dest}" "${src}"
+        if ln -sf "${src}" "${dest}"; then
+            printf 'Linked %s -> %s\n' "${dest}" "${src}"
+        else
+            printf 'Failed to link %s -> %s\n' "${dest}" "${src}" >&2
+        fi
     done
 }
 
