@@ -10,6 +10,8 @@ m.nmap("H", "g^", "move to the end of the current line")
 m.nmap("L", "g$", "move to the start of the current line")
 m.nmap("j", "gj", "move up a line")
 m.nmap("k", "gk", "move down a line")
+m.nmap("<C-u>", "<C-u>zz", "jump up and center")
+m.nmap("<C-d>", "<C-d>zz", "jump down and center")
 
 -- navigation
 m.nmap("<C-h>", "<C-w><C-h>", "navigate to window, left")
@@ -20,13 +22,10 @@ m.nmap("<C-l>", "<C-w><C-l>", "navigate to window, right")
 m.nmap("<C-Left>", ":tabp<cr>", "navigate to previous tab")
 m.nmap("<C-Right>", ":tabn<cr>", "navigate to next tab")
 
-m.nmap("<leader><leader>", "<C-^>", "swap to previous buffer in current window")
+-- Going to try using `<leader><leader>` to show `Telescope diagnostics`
+-- m.nmap("<leader><leader>", "<C-^>", "swap to previous buffer in current window")
 m.nmap("<Right>", ":bn<cr>", "show next buffer in current window")
 m.nmap("<Left>", ":bprev<cr>", "show previous buffer in the current window")
-
--- debugging
-m.nmap("<F8>", ":cnext<cr>", "go to next error")
-m.nmap("<F20>", ":cprev<cr>", "go to previous error")
 
 -- move lines up and down
 local nv = { "n", "v" }

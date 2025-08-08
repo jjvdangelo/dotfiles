@@ -2,18 +2,14 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         build = function()
-            require("nvim-treesitter.install").update({ with_sync = true })()
+            local install = require "nvim-treesitter.install"
+            install.prefer_git = false
+            install.update({ with_sync = true })()
         end,
 
         config = function()
             require "nvim-treesitter.configs".setup {
-                ensure_installed = {
-                    "bash", "dockerfile", "go", "gomod", "gosum", "gotmpl",
-                    "html", "javascript", "lua", "markdown", "markdown_inline",
-                    "nginx", "powershell", "query", "robots", "rust", "sql",
-                    "ssh_config", "templ", "todotxt", "toml", "typescript",
-                    "xml", "yaml", "zig",
-                },
+                ensure_installed = {},
                 highlight = {
                     enable = true,
                     additional_vim_regex_highlighting = false,
@@ -32,7 +28,7 @@ return {
         "vrischmann/tree-sitter-templ",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
 
-        init = function()
+        config = function()
             vim.filetype.add { extensions = { templ = "templ" } }
         end,
     },

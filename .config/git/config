@@ -5,6 +5,8 @@
 
 [core]
 	editor = nvim
+	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
+	autocrlf = input
 
 [filter "lfs"]
 	clean = git-lfs clean -- %f
@@ -34,3 +36,5 @@
 	gpgsign = true
 [tag]
 	gpgSign = true
+[fetch]
+	prune = true

@@ -1,7 +1,7 @@
 return {
     {
         "nvim-telescope/telescope-ui-select.nvim",
-        opts = { overseer = { enabled = true } },
+        opts = { overseer = { enabled = false } },
     },
 
     {
@@ -15,13 +15,18 @@ return {
             "nvim-telescope/telescope-ui-select.nvim",
         },
 
-        keys = {
-            { "Q", "<cmd>Telescope cmdline<cr>", desc = "CmdLine" }
-        },
-
         config = function()
             local ts = require "telescope"
+            local k = require "utils.kmap"
             local ta = require "telescope.actions"
+            local tele = require "telescope.builtin"
+
+            ts.load_extension("ui-select")
+            ts.load_extension("cmdline")
+            ts.load_extension("dap")
+
+            k.nmap("<leader>f", tele.live_grep, "live grep")
+            k.nmap("<leader>ff", tele.find_files, "find files")
 
             ts.setup {
                 pickers = {
@@ -55,17 +60,13 @@ return {
 
                     ["cmdline"] = {
                         mappings = {
-                            complete = "<tab>",
+                            complete = "<C-y>",
                             run_selection = "<c-cr>",
                             run_input = "<cr>",
                         },
                     },
                 },
             }
-
-            ts.load_extension("ui-select")
-            ts.load_extension("cmdline")
-            ts.load_extension("dap")
         end,
     },
 

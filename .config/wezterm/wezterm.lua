@@ -6,7 +6,7 @@ config.check_for_updates = true
 
 config.color_scheme = "Catppuccin Mocha"
 config.window_background_opacity = 0.95
-config.text_background_opacity = 1
+config.text_background_opacity = 0.95
 config.macos_window_background_blur = 10
 config.win32_system_backdrop = "Tabbed" -- Auto, Disable, Acrylic, Mica, Tabbed
 config.bold_brightens_ansi_colors = true
@@ -20,9 +20,12 @@ config.initial_rows = 48
 -- Liked:
 -- config.font = wezterm.font("M+CodeLat60 Nerd Font Mono", { weight = "DemiBold", italic = false })
 -- config.font = wezterm.font("Agave Nerd Font Mono", { weight = "DemiBold", italic = false })
+-- config.font = wezterm.font("Agave Nerd Font Mono", { italic = false })
+--      config.font_size = 9.5
+--      config.line_height = 1.1
 
-config.font = wezterm.font("Agave Nerd Font Mono", { italic = false })
-config.font_size = 11
+config.font = wezterm.font("M+1Code Nerd Font Mono", { weight = "Medium", italic = false })
+config.font_size = 9
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 
 config.audible_bell = "Disabled"

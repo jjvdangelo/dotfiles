@@ -7,7 +7,7 @@ local sorters = require "telescope.sorters"
 local M = {}
 
 local function live_multigrep()
-    opts = M.opts or {}
+    local opts = M.opts or {}
     ---@diagnostic disable:undefined-field
     opts.cwd = opts.cwd or vim.uv.cwd()
 
@@ -29,6 +29,8 @@ local function live_multigrep()
                 table.insert(args, "-g")
                 table.insert(args, pieces[2])
             end
+
+            -- local asksf = { @
 
             return vim.tbl_flatten {
                 args,
