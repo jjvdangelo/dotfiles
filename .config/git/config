@@ -5,7 +5,6 @@
 
 [core]
 	editor = nvim
-	sshCommand = C:/Windows/System32/OpenSSH/ssh.exe
 	autocrlf = input
 
 [filter "lfs"]
@@ -38,3 +37,6 @@
 	gpgSign = true
 [fetch]
 	prune = true
+
+[includeIf "hasconfig:windows"]
+	path = ~/.config/git/config-windows
