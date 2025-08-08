@@ -5,7 +5,11 @@ if uname == "Darwin" then
 elseif uname == "Windows_NT" then
     require "config.windows"
 elseif uname == "Linux" then
-    require "config.wsl"
+    if vim.fn.getenv("WSL_DISTRO_NAME") ~= vim.NIL then
+        require "config.wsl"
+    else
+        require "config.linux"
+    end
 end
 
 require "config.settings"
