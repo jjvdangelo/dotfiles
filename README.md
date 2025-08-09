@@ -12,7 +12,7 @@ Before running any scripts, ensure Git is installed. The setup commands below co
 
 ### Windows
 
-1. Open **PowerShell**.
+1. Open an elevated **PowerShell** prompt (Run as Administrator).
 2. Clone the repository:
    ```powershell
    git clone https://github.com/OWNER/dotfiles.git $HOME\.dotfiles
