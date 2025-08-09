@@ -37,19 +37,6 @@ Function new-link-folder ($folder) {
 }
 
 # PSReadLine config
-$PSReadLineOptions = @{
-    EditMode = "Vi"
-    HistorySaveStyle = "SaveAtExit"
-    MaximumHistoryCount = 1000
-    PredictionSource = "History"
-    # PredictionViewStyle = "ListView"
-    ViModeIndicator = "Script"
-    ViModeChangeHandler = $Function:OnViModeChange
-    AddToHistoryHandler = $Function:HistoryHandler
-    HistoryNoDuplicates = $true
-}
-Set-PSReadLineOption @PSReadLineOptions
-
 function OnViModeChange {
     if ($args[0] -eq 'Command') {
         Write-Host -NoNewline "`e[2 q"
@@ -59,11 +46,24 @@ function OnViModeChange {
 }
 
 function HistoryHandler {
-    return param($line)
-        $line.Length -le 3 ||
-        -not $line.StartsWith(' ') ||
-        @("exit", "dir", "ls", "pwd", "cd ..").Contains($line.ToLowerInvariant())
+    param($line)
+    $line.Length -le 3 -or
+    -not $line.StartsWith(' ') -or
+    @("exit","dir","ls","pwd","cd ..").Contains($line.ToLowerInvariant())
 }
+
+$PSReadLineOptions = @{
+    EditMode = "Vi"
+    HistorySaveStyle = "SaveIncrementally"
+    MaximumHistoryCount = 1000
+    PredictionSource = "History"
+    # PredictionViewStyle = "ListView"
+    ViModeIndicator = "Script"
+    ViModeChangeHandler = $Function:OnViModeChange
+    AddToHistoryHandler = $Function:HistoryHandler
+    HistoryNoDuplicates = $true
+}
+Set-PSReadLineOption @PSReadLineOptions
 
 Set-PSReadLineKeyHandler -Key Ctrl+p -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key Ctrl+n -Function HistorySearchForward
@@ -116,7 +116,14 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
     function BatFzf {
         & fzf @args --preview "bat --line-range :500 {}"
     }
-    Invoke-Expression (bat --completion ps1 | Out-String) -ErrorAction Stop
+    $batCompletion = Join-Path $HOME ".cache/bat-completions.ps1"
+    if (Test-Path $batCompletion) {
+        . $batCompletion
+    }
+    $refreshBatCompletionsScript = Join-Path $PSScriptRoot "scripts/windows/refresh-bat-completions.ps1"
+    function Refresh-BatCompletions {
+        & $refreshBatCompletionsScript
+    }
 }
 
 # dotnet
@@ -125,10 +132,18 @@ if (Get-Command dotnet -ErrorAction SilentlyContinue) {
 }
 
 # starship config
-if (Get-Command starship -ErrorAction SilentlyContinue) {
-    function Invoke-Starship-PreCommand {
-        $host.ui.RawUI.WindowTitle = "` $pwd `a"
-    }
+function Enable-Starship {
+    if (Get-Command starship -ErrorAction SilentlyContinue) {
+        function global:Invoke-Starship-PreCommand {
+            $host.ui.RawUI.WindowTitle = "` $pwd `a"
+        }
 
-    Invoke-Expression (&starship init powershell)
+        Invoke-Expression (&starship init powershell)
+    }
+}
+
+$cmdArgs = [Environment]::GetCommandLineArgs()
+$isInteractive = -not ($cmdArgs -contains '-Command' -or $cmdArgs -contains '-File')
+if ($env:USE_STARSHIP -or $isInteractive) {
+    Enable-Starship
 }
