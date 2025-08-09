@@ -39,19 +39,6 @@ Function new-link-folder ($folder) {
 }
 
 # PSReadLine config
-$PSReadLineOptions = @{
-    EditMode = "Vi"
-    HistorySaveStyle = "SaveAtExit"
-    MaximumHistoryCount = 1000
-    PredictionSource = "History"
-    # PredictionViewStyle = "ListView"
-    ViModeIndicator = "Script"
-    ViModeChangeHandler = $Function:OnViModeChange
-    AddToHistoryHandler = $Function:HistoryHandler
-    HistoryNoDuplicates = $true
-}
-Set-PSReadLineOption @PSReadLineOptions
-
 function OnViModeChange {
     if ($args[0] -eq 'Command') {
         Write-Host -NoNewline "`e[2 q"
@@ -61,11 +48,24 @@ function OnViModeChange {
 }
 
 function HistoryHandler {
-    return param($line)
-        $line.Length -le 3 ||
-        -not $line.StartsWith(' ') ||
-        @("exit", "dir", "ls", "pwd", "cd ..").Contains($line.ToLowerInvariant())
+    param($line)
+    $line.Length -le 3 -or
+    -not $line.StartsWith(' ') -or
+    @("exit","dir","ls","pwd","cd ..").Contains($line.ToLowerInvariant())
 }
+
+$PSReadLineOptions = @{
+    EditMode = "Vi"
+    HistorySaveStyle = "SaveIncrementally"
+    MaximumHistoryCount = 1000
+    PredictionSource = "History"
+    # PredictionViewStyle = "ListView"
+    ViModeIndicator = "Script"
+    ViModeChangeHandler = $Function:OnViModeChange
+    AddToHistoryHandler = $Function:HistoryHandler
+    HistoryNoDuplicates = $true
+}
+Set-PSReadLineOption @PSReadLineOptions
 
 Set-PSReadLineKeyHandler -Key Ctrl+p -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key Ctrl+n -Function HistorySearchForward
