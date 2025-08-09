@@ -3,8 +3,8 @@
 
 Set-StrictMode -Version Latest
 
-$Script:ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$Script:DotfilesRoot = Split-Path -Parent $Script:ScriptDir
+# repository root is assumed to be ~/.dotfiles
+$Script:DotfilesRoot = Join-Path $HOME '.dotfiles'
 $Script:ConfigRoot = Join-Path $HOME '.config'
 
 function Test-WingetPackage {
@@ -39,6 +39,10 @@ function New-Symlink {
         Move-Item $Destination "$Destination.bak" -Force
         Write-Host "Moved existing $Destination to $Destination.bak" -ForegroundColor Yellow
     }
+    $destDir = Split-Path -Parent $Destination
+    if (-not (Test-Path $destDir)) {
+        New-Item -ItemType Directory -Path $destDir | Out-Null
+    }
     New-Item -ItemType SymbolicLink -Path $Destination -Target $Source | Out-Null
     Write-Host "Linked $Destination -> $Source" -ForegroundColor Green
 }
@@ -46,12 +50,13 @@ function New-Symlink {
 function Link-ConfigFolder {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory=$true)][string]$DestDir,
+        [string]$DestDir = '',
         [Parameter(Mandatory=$true)][string[]]$Names
     )
     foreach ($name in $Names) {
         $src = Join-Path $DotfilesRoot $name
-        $dest = Join-Path (Join-Path $HOME $DestDir) $name
+        $destRoot = if ($DestDir) { Join-Path $HOME $DestDir } else { $HOME }
+        $dest = Join-Path $destRoot $name
         Write-Host "Creating symlink $dest -> $src" -ForegroundColor Cyan
         New-Symlink -Source $src -Destination $dest
     }
