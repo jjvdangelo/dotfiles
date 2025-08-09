@@ -6,5 +6,4 @@ fi
 # shellcheck disable=SC1091 # SCRIPT_DIR is resolved at runtime.
 . "${SCRIPT_DIR}/lib/common.sh"
 
-link_configs ".config" "nvim" "git" "wezterm" "fd"
-link_files "$DF_BASE/.config/starship.toml"
+link_config "" ".config"
