@@ -1,3 +1,9 @@
+# command availability lookup
+$cmd = @{}
+foreach ($c in 'eza','zoxide','bat','dotnet','starship') {
+    $cmd[$c] = [bool](Get-Command $c -ErrorAction SilentlyContinue)
+}
+
 # module imports (installation handled by scripts/windows/install-modules.ps1)
 $modules = @('PSReadLine', 'posh-git', 'PSFzf', 'VCVars')
 foreach ($m in $modules) {
@@ -77,7 +83,7 @@ $env:FZF_DEFAULT_OPTS = '--preview "eza -al --icons --color {}"'
 $env:FZF_ALT_C_OPTS   = '--preview "eza -al --icons --color {}"'
 
 # eza config
-if (Get-Command eza -ErrorAction SilentlyContinue) {
+if ($cmd['eza']) {
     function l  { & eza      --icons @args }
     function ls { & eza -al  --icons --color @args }
     function ll { & eza -lg  --icons --color @args }
@@ -107,12 +113,12 @@ if (Test-Path -path $vsToolsLoc) {
 }
 
 # zoxide config
-if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+if ($cmd['zoxide']) {
     Invoke-Expression (& zoxide init powershell)
 }
 
 # bat config
-if (Get-Command bat -ErrorAction SilentlyContinue) {
+if ($cmd['bat']) {
     function BatFzf {
         & fzf @args --preview "bat --line-range :500 {}"
     }
@@ -127,13 +133,13 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
 }
 
 # dotnet
-if (Get-Command dotnet -ErrorAction SilentlyContinue) {
+if ($cmd['dotnet']) {
     $env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
 }
 
 # starship config
 function Enable-Starship {
-    if (Get-Command starship -ErrorAction SilentlyContinue) {
+    if ($cmd['starship']) {
         function global:Invoke-Starship-PreCommand {
             $host.ui.RawUI.WindowTitle = "` $pwd `a"
         }
