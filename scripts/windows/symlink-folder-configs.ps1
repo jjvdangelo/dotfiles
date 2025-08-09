@@ -2,4 +2,4 @@
 
 . "$PSScriptRoot/common.ps1"
 
-Link-ConfigFolder '.config' @('nvim', 'git', 'wezterm', 'fd', 'starship.toml')
+Link-ConfigFolder '' @('.config')
