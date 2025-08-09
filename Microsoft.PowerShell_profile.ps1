@@ -127,10 +127,18 @@ if (Get-Command dotnet -ErrorAction SilentlyContinue) {
 }
 
 # starship config
-if (Get-Command starship -ErrorAction SilentlyContinue) {
-    function Invoke-Starship-PreCommand {
-        $host.ui.RawUI.WindowTitle = "` $pwd `a"
-    }
+function Enable-Starship {
+    if (Get-Command starship -ErrorAction SilentlyContinue) {
+        function global:Invoke-Starship-PreCommand {
+            $host.ui.RawUI.WindowTitle = "` $pwd `a"
+        }
 
-    Invoke-Expression (&starship init powershell)
+        Invoke-Expression (&starship init powershell)
+    }
+}
+
+$cmdArgs = [Environment]::GetCommandLineArgs()
+$isInteractive = -not ($cmdArgs -contains '-Command' -or $cmdArgs -contains '-File')
+if ($env:USE_STARSHIP -or $isInteractive) {
+    Enable-Starship
 }
