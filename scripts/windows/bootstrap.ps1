@@ -11,4 +11,5 @@ $dir = Split-Path -Parent $MyInvocation.MyCommand.Path
 & "$dir/install-and-configure-git.ps1"
 & "$dir/install-go.ps1"
 & "$dir/symlink-folder-configs.ps1"
+& "$dir/install-modules.ps1"
 & "$dir/refresh-bat-completions.ps1"
