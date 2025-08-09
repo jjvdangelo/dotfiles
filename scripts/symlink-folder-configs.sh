@@ -1,13 +1,10 @@
 #!/bin/sh
 # symlink-folder-configs.sh - create a symlink for config folders
 if [ -z "${SCRIPT_DIR+x}" ]; then
-    SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "${0}")" && pwd)
+    SCRIPT_DIR=$(CDPATH="" cd -- "$(dirname -- "${0}")" && pwd)
 fi
 # shellcheck disable=SC1091 # SCRIPT_DIR is resolved at runtime.
 . "${SCRIPT_DIR}/lib/common.sh"
-
-# Required from `common.sh`:
-#  - SCRIPT_DIR
 
 link_configs ".config" "nvim"
 link_configs "" ".ssh"

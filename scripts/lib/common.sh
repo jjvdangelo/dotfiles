@@ -1,17 +1,16 @@
 # .dotfiles/lib/common.sh  (POSIX-compliant; guarded against double-load)
+# shellcheck shell=sh disable=SC3043 # 'local' supported in target shells
 [ -n "${_DOTFILES_COMMON_LOADED+x}" ] && return
 _DOTFILES_COMMON_LOADED=1
 
 set -eu
 
 DF_BASE="${HOME}/.dotfiles"
-CONF_BASE="${HOME}/.config"
-SCRIPT_DIR="${DF_BASE}/scripts"
 
 OS="$(uname -s)"
 PKG_CMD=""
 
-err() { printf 'Error: %s.\n' "$*" >&2; exit 1; }
+err() { printf "Error: %s.\n" "$*" >&2; exit 1; }
 
 _detect_pkg_manager() {
     case "${OS}" in
@@ -29,7 +28,7 @@ _detect_pkg_manager() {
                        "sudo pacman -Sy --noconfirm" \
                        "sudo zypper install -y"
            do
-               set -- $try # $1 is candidate cmd; $* full string
+               set -- "$try" # $1 is candidate cmd; $* full string
                if command -v "${1}" >/dev/null 2>&1; then
                    PKG_CMD=$try
                    break
@@ -49,7 +48,7 @@ _detect_pkg_manager() {
 install_packages() {
     [ -n "${PKG_CMD}" ] || _detect_pkg_manager
     for pkg in "${@}"; do
-        printf 'Installing %s.\n' "${pkg}"
+        printf "Installing %s.\n" "${pkg}"
         # shellcheck disable=SC2086 # intentional word splitting
         $PKG_CMD "${pkg}"
     done
@@ -60,47 +59,54 @@ prompt_and_validate() {
 
     while true; do
         if [ -n "${default}" ]; then
-            printf '%s [%s]' "${prompt}" "${default}" >/dev/tty
+            printf "%s [%s]" "${prompt}" "${default}" >/dev/tty
         else
-            printf '%s ' "${prompt}" >/dev/tty
+            printf "%s " "${prompt}" >/dev/tty
         fi
 
         IFS= read -r input </dev/tty
         [ -z "${input}" ] && input="${default}"
 
-        printf '%s\n' "${input}" | grep -E -q "${regex}" && {
+        printf "%s\n" "${input}" | grep -E -q "${regex}" && {
             eval "${var}=\${input}"
             return
         }
 
-        printf 'Invalid input.\n' >/dev/tty
+        printf "Invalid input.\n" >/dev/tty
     done
 }
 
 link_files() {
     for src in "${@}"; do
-        local rel="${src#${HOME}/.dotfiles/}"
+        local rel="${src#"${HOME}"/.dotfiles/}"
 
         if [ "${rel}" = "${src}" ]; then
-            printf 'Skipping invalid source (not under ~/.dotfiles): %s\n' "${src}" >&2
+            printf "Skipping invalid source (not under ~/.dotfiles): %s\n" "${src}" >&2
             continue
         fi
 
         local dest="${HOME}/${rel}"
 
         if [ ! -e "${src}" ]; then
-            printf 'Skipping %s: source %s does not exist.\n' "${file}" "${src}" >&2
+            printf "Skipping %s: source does not exist.\n" "${src}" >&2
             continue
         fi
 
         if [ -L "${dest}" ] || [ -e "${dest}" ]; then
-            # mv "${dest}" "${dest}.bak"
-            printf 'Moved existing %s to %s\n' "${dest}" "${dest}.bak"
+            if mv "${dest}" "${dest}.bak"; then
+                printf 'Moved existing %s to %s\n' "${dest}" "${dest}.bak"
+            else
+                printf 'Failed to move %s to %s; skipping\n' "${dest}" "${dest}.bak" >&2
+                continue
+            fi
         fi
 
         mkdir -p "$(dirname "${dest}")"
-        ln -s "${src}" "${dest}"
-        printf 'Linked %s -> %s\n' "${dest}" "${src}"
+        if ln -sf "${src}" "${dest}"; then
+            printf 'Linked %s -> %s\n' "${dest}" "${src}"
+        else
+            printf 'Failed to link %s -> %s\n' "${dest}" "${src}" >&2
+        fi
     done
 }
 
@@ -113,14 +119,15 @@ link_config() {
     local src="${DF_BASE}/${name}"
     local dest="${HOME}${dest_dir:+/${dest_dir}}/${name}"
 
-    printf 'Creating symlink\n  %s → %s\n' "${src}" "${dest}"
+    printf "Creating symlink\n  %s → %s\n" "${src}" "${dest}"
 
     [ -d "${src}" ] || {
-        printf '⤹ Skipping %s (source not found)\n' "${src}"
+        printf "⤹ Skipping %s (source not found)\n" "${src}"
         return
     }
 
-    local target_dir="$(dirname "${dest}")"
+    local target_dir
+    target_dir="$(dirname "${dest}")"
     mkdir -p "${target_dir}" || err "Failed to create ${target_dir} directory"
 
     if [ -e "${dest}" ] && [ ! -L "${dest}" ]; then
@@ -130,9 +137,10 @@ link_config() {
     fi
 
     if [ -L "${dest}" ]; then
-        local current="$(readlink "${dest}")" || true
+        local current
+        current="$(readlink "${dest}")" || true
         [ "${current}" = "${src}" ] && {
-            printf '⤹ %s is already linked – skipping\n' "${dest}"
+            printf "⤹ %s is already linked – skipping\n" "${dest}"
             return
         }
 
@@ -142,7 +150,7 @@ link_config() {
     fi
 
     ln -s "${src}" "${dest}" || err "Failed to create symlink for ${name}"
-    printf '  ✓ Linked %s → %s\n' "${dest}" "${src}"
+    printf "  ✓ Linked %s → %s\n" "${dest}" "${src}"
 }
 
 link_configs() {

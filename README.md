@@ -60,6 +60,10 @@ For other apt-based distributions, follow the same steps as for WSL.
 - `nvim/` and `.config/` hold editor and application configurations.
 - `.zshrc`, `.zshenv`, `.bashrc` etc. are typical shell dotfiles linked to the home directory.
 
+## Development
+
+Run `shellcheck scripts/*.sh scripts/lib/*.sh` and address any warnings before committing changes.
+
 ## Notes
 
 Running the setup scripts may move any existing files to `*.bak` before creating symlinks.
