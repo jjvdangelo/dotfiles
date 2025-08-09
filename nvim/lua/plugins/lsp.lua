@@ -66,7 +66,7 @@ return {
 
             cmp.setup.cmdline({ "/", "?" }, {
                 mapping = cmp.mapping.preset.cmdline(),
-                source = { { "buffer" } },
+                sources = { { name = "buffer" } },
             })
 
             cmp.setup.cmdline(":", {
