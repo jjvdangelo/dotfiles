@@ -47,9 +47,9 @@ function OnViModeChange {
 
 function HistoryHandler {
     param($line)
-    $line.Length -le 3 -or
-    -not $line.StartsWith(' ') -or
-    @("exit","dir","ls","pwd","cd ..").Contains($line.ToLowerInvariant())
+    $line.Length -gt 3 -and
+    -not $line.StartsWith(' ') -and
+    -not @('exit','dir','ls','pwd','cd ..').Contains($line.ToLowerInvariant())
 }
 
 $PSReadLineOptions = @{
