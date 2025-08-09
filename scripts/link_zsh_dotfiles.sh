@@ -27,7 +27,7 @@ if ! command -v zsh >/dev/null 2>&1; then
     esac
 fi
 
-printf "Creating symlinks for zsh dotfiles in \"~/.dotfiles\" to \"~/\""
+printf "Creating symlinks for zsh dotfiles in \"~/.dotfiles\" to \"~/\"\n"
 find "${HOME}/.dotfiles" -maxdepth 1 \( -name '.zshrc' -o -name '.zshenv' -o -name '.zsh_history' \) \( -type f -o -type l \) | while IFS= read -r file; do
     link_files "${file}"
 done
