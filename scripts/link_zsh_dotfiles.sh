@@ -6,6 +6,13 @@
 # shellcheck source=lib/common.sh disable=SC1091 # sourced from repo
 . "${HOME}/.dotfiles/scripts/lib/common.sh"
 
+case "$(printf '%s' "${OS}" | tr '[:upper:]' '[:lower:]')" in
+    mingw*|msys*|cygwin*|windows_nt)
+        printf 'Skipping linking zsh dotfiles: not supported on Windows.\n' >&2
+        exit 0
+        ;;
+esac
+
 if ! command -v zsh >/dev/null 2>&1; then
     prompt_and_validate install_zsh "zsh not found. Install it?" '[YyNn]' 'N'
     # shellcheck disable=SC2154 # set by prompt_and_validate
@@ -20,7 +27,7 @@ if ! command -v zsh >/dev/null 2>&1; then
     esac
 fi
 
-printf "Creating symlinks for all dotfiles directly under \"~/.dotfiles\" to \"~/\""
-find "${HOME}/.dotfiles" \( -type f -o -type l \) | while IFS= read -r file; do
+printf "Creating symlinks for zsh dotfiles in \"~/.dotfiles\" to \"~/\""
+find "${HOME}/.dotfiles" -maxdepth 1 \( -name '.zshrc' -o -name '.zshenv' -o -name '.zsh_history' \) \( -type f -o -type l \) | while IFS= read -r file; do
     link_files "${file}"
 done
