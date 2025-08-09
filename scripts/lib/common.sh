@@ -22,22 +22,25 @@ _detect_pkg_manager() {
             PKG_CMD="brew install"
             ;;
         Linux)
-            for try in "sudo apt-get install -y" \
-                       "sudo dnf install -y" \
-                       "sudo yum install -y" \
-                       "sudo pacman -Sy --noconfirm" \
-                       "sudo zypper install -y"
-           do
-               set -- "$try" # $1 is candidate cmd; $* full string
-               if command -v "${1}" >/dev/null 2>&1; then
-                   PKG_CMD=$try
-                   break
-               fi
-           done
-           [ -n "${PKG_CMD}" ] || {
-               err "supported package manager not found"
-           }
-           ;;
+            sudo_prefix=""
+            [ "$(id -u)" -eq 0 ] || sudo_prefix="sudo "
+
+            for try in "apt-get install -y" \
+                       "dnf install -y" \
+                       "yum install -y" \
+                       "pacman -Sy --noconfirm" \
+                       "zypper install -y"
+            do
+                candidate=${try%% *}
+                if command -v "${candidate}" >/dev/null 2>&1; then
+                    PKG_CMD="${sudo_prefix}${try}"
+                    break
+                fi
+            done
+            [ -n "${PKG_CMD}" ] || {
+                err "supported package manager not found"
+            }
+            ;;
        *)
            err "unsupported OS " "${OS}"
            exit 1
