@@ -38,5 +38,5 @@
 [fetch]
 	prune = true
 
-[includeIf "hasconfig:windows"]
+[includeIf "gitdir/i:C:/"]
 	path = ~/.config/git/config-windows
