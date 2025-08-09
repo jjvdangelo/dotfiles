@@ -7,5 +7,4 @@ fi
 . "${SCRIPT_DIR}/lib/common.sh"
 
 link_configs ".config" "nvim" "git" "wezterm" "fd"
-link_configs "" ".ssh"
 link_files "$DF_BASE/.config/starship.toml"
