@@ -118,7 +118,14 @@ if (Get-Command bat -ErrorAction SilentlyContinue) {
     function BatFzf {
         & fzf @args --preview "bat --line-range :500 {}"
     }
-    Invoke-Expression (bat --completion ps1 | Out-String) -ErrorAction Stop
+    $batCompletion = Join-Path $HOME ".cache/bat-completions.ps1"
+    if (Test-Path $batCompletion) {
+        . $batCompletion
+    }
+    $refreshBatCompletionsScript = Join-Path $PSScriptRoot "scripts/windows/refresh-bat-completions.ps1"
+    function Refresh-BatCompletions {
+        & $refreshBatCompletionsScript
+    }
 }
 
 # dotnet
