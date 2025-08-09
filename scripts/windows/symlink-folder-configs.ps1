@@ -3,4 +3,4 @@
 . "$PSScriptRoot/common.ps1"
 
 Link-ConfigFolder '.config' @('nvim')
-Link-ConfigFolder '' @('.ssh')
+Link-ConfigFolder -Names @('.ssh')
