@@ -1,15 +1,11 @@
+# check for interactive use
+$cmdArgs = [Environment]::GetCommandLineArgs()
+$isInteractive = -not ($cmdArgs -contains '-Command' -or $cmdArgs -contains '-File')
+
 # command availability lookup
 $cmd = @{}
 foreach ($c in 'eza','zoxide','bat','dotnet','starship') {
     $cmd[$c] = [bool](Get-Command $c -ErrorAction SilentlyContinue)
-}
-
-# module imports (installation handled by scripts/windows/install-modules.ps1)
-$modules = @('PSReadLine', 'posh-git', 'PSFzf', 'VCVars')
-foreach ($m in $modules) {
-    if (Get-Module -ListAvailable -Name $m) {
-        Import-Module $m -ErrorAction Stop
-    }
 }
 
 Function Test-Elevated {
@@ -39,6 +35,56 @@ Function new-link-folder ($folder) {
         $target = "C:\tools\bin\$fname"
         Write-Host "Creating symlink:   $target"
         new-link $_ $target
+    }
+}
+
+# PsFzf config
+Set-PsFzfOption -TabExpansion
+Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
+$env:FZF_DEFAULT_OPTS = '--preview "eza -al --icons --color {}"'
+$env:FZF_ALT_C_OPTS   = '--preview "eza -al --icons --color {}"'
+
+# vstools
+$vsToolsLoc = "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1"
+if (Test-Path -path $vsToolsLoc) {
+    function Enable-VSTools {
+        & $vsToolsLoc
+    }
+} else {
+    function Enable-VSTools {
+        Write-Host "Launch-VsDevShell.ps1 not found."
+    }
+}
+
+# dotnet
+if ($cmd['dotnet']) {
+    $env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
+}
+
+# starship config
+function Enable-Starship {
+    if ($cmd['starship']) {
+        function global:Invoke-Starship-PreCommand {
+            $host.ui.RawUI.WindowTitle = "` $pwd `a"
+        }
+
+        Invoke-Expression (&starship init powershell)
+    }
+}
+
+if (-not $isInteractive) {
+    if ($env:USE_STARSHIP) {
+        Enable-Starship
+    }
+
+    return
+}
+
+# module imports (installation handled by scripts/windows/install-modules.ps1)
+$modules = @('PSReadLine', 'posh-git', 'PSFzf', 'VCVars')
+foreach ($m in $modules) {
+    if (Get-Module -ListAvailable -Name $m) {
+        Import-Module $m -ErrorAction Stop
     }
 }
 
@@ -76,11 +122,20 @@ Set-PSReadLineKeyHandler -Key Ctrl+n -Function HistorySearchForward
 Set-PSReadLineKeyHandler -Key Ctrl+y -Function AcceptLine
 Set-PSReadLineKeyHandler -Key Ctrl+w -Function BackwardDeleteWord
 
-# PsFzf config
-Set-PsFzfOption -TabExpansion
-Set-PsFzfOption -PSReadlineChordReverseHistory 'Ctrl+r'
-$env:FZF_DEFAULT_OPTS = '--preview "eza -al --icons --color {}"'
-$env:FZF_ALT_C_OPTS   = '--preview "eza -al --icons --color {}"'
+# bat config
+if ($cmd['bat']) {
+    function BatFzf {
+        & fzf @args --preview "bat --line-range :500 {}"
+    }
+    $batCompletion = Join-Path $HOME ".cache/bat-completions.ps1"
+    if (Test-Path $batCompletion) {
+        . $batCompletion
+    }
+    $refreshBatCompletionsScript = Join-Path $PSScriptRoot "scripts/windows/refresh-bat-completions.ps1"
+    function Refresh-BatCompletions {
+        & $refreshBatCompletionsScript
+    }
+}
 
 # eza config
 if ($cmd['eza']) {
@@ -100,56 +155,9 @@ if ($cmd['eza']) {
     function lta3 { & eza -lTag --icons --color --level=3 @args }
 }
 
-# vstools
-$vsToolsLoc = "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1"
-if (Test-Path -path $vsToolsLoc) {
-    function Enable-VSTools {
-        & $vsToolsLoc
-    }
-} else {
-    function Enable-VSTools {
-        Write-Host "Launch-VsDevShell.ps1 not found."
-    }
-}
-
 # zoxide config
 if ($cmd['zoxide']) {
     Invoke-Expression (& zoxide init powershell)
 }
 
-# bat config
-if ($cmd['bat']) {
-    function BatFzf {
-        & fzf @args --preview "bat --line-range :500 {}"
-    }
-    $batCompletion = Join-Path $HOME ".cache/bat-completions.ps1"
-    if (Test-Path $batCompletion) {
-        . $batCompletion
-    }
-    $refreshBatCompletionsScript = Join-Path $PSScriptRoot "scripts/windows/refresh-bat-completions.ps1"
-    function Refresh-BatCompletions {
-        & $refreshBatCompletionsScript
-    }
-}
-
-# dotnet
-if ($cmd['dotnet']) {
-    $env:DOTNET_CLI_TELEMETRY_OPTOUT = $true
-}
-
-# starship config
-function Enable-Starship {
-    if ($cmd['starship']) {
-        function global:Invoke-Starship-PreCommand {
-            $host.ui.RawUI.WindowTitle = "` $pwd `a"
-        }
-
-        Invoke-Expression (&starship init powershell)
-    }
-}
-
-$cmdArgs = [Environment]::GetCommandLineArgs()
-$isInteractive = -not ($cmdArgs -contains '-Command' -or $cmdArgs -contains '-File')
-if ($env:USE_STARSHIP -or $isInteractive) {
-    Enable-Starship
-}
+Enable-Starship

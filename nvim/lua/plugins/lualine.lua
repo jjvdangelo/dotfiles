@@ -8,7 +8,7 @@ return {
 
         opts = {
             options = {
-                theme = "catppuccin",
+                theme = "alabaster",
                 globalstatus = true,
                 icons_enabled = true,
                 component_separators = { left = "", right = "" },

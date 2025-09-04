@@ -55,16 +55,16 @@ return {
         },
 
         config = function(_, opts)
-            vim.o.termguicolors = true
-            vim.o.background = "dark"
-
-            vim.cmd "highlight clear"
-            vim.cmd "syntax reset"
-
-            opts.dim_inactive.shade = vim.o.background
-
-            require "catppuccin".setup(opts)
-            vim.cmd.colorscheme "catppuccin"
+            -- vim.o.termguicolors = true
+            -- vim.o.background = "dark"
+            --
+            -- vim.cmd "highlight clear"
+            -- vim.cmd "syntax reset"
+            --
+            -- opts.dim_inactive.shade = vim.o.background
+            --
+            -- require "catppuccin".setup(opts)
+            -- vim.cmd.colorscheme "catppuccin"
         end,
     },
 }

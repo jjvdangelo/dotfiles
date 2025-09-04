@@ -4,11 +4,14 @@ local config = wezterm.config_builder()
 config.automatically_reload_config = true
 config.check_for_updates = true
 
-config.color_scheme = "Catppuccin Mocha"
-config.window_background_opacity = 0.95
-config.text_background_opacity = 0.95
-config.macos_window_background_blur = 10
-config.win32_system_backdrop = "Tabbed" -- Auto, Disable, Acrylic, Mica, Tabbed
+config.color_scheme = "canvas-dark"
+-- config.color_scheme = "alabaster-dark" -- ~/.config/wezterm/colors/alabaster-dark.toml
+-- config.color_scheme = "Catppuccin Mocha" -- built in
+
+-- config.window_background_opacity = 0.99
+-- config.text_background_opacity = 0.99
+-- config.macos_window_background_blur = 10
+config.win32_system_backdrop = "Auto" -- Auto, Disable, Acrylic, Mica, Tabbed
 config.bold_brightens_ansi_colors = true
 config.window_decorations = "RESIZE"
 config.hide_tab_bar_if_only_one_tab = false
@@ -23,7 +26,6 @@ config.initial_rows = 48
 -- config.font = wezterm.font("Agave Nerd Font Mono", { italic = false })
 --      config.font_size = 9.5
 --      config.line_height = 1.1
-
 config.font = wezterm.font("M+1Code Nerd Font Mono", { weight = "Medium", italic = false })
 config.font_size = 9
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
@@ -41,6 +43,8 @@ config.keys = {
 
 -- domain setup
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
+    wezterm.color_scheme_dirs = { os.getenv("USERPROFILE") .. "/.config/wezterm/colors" }
+
     config.wsl_domains = {
         {
             name = "WSL:Ubuntu",

@@ -1,0 +1,31 @@
+# Canvas Dark
+[colors]
+foreground = "#d2d2cd"
+background   = "#141821"
+cursor_bg    = "#a786f0"
+cursor_fg    = "#141821"
+cursor_border= "#a896f0"
+selection_bg = "#242a34"
+selection_fg = "#d2d2cd"
+
+ansi = [
+    "#141821",
+    "#e06c75",
+    "#a9b8d8",
+    "#d2b06b",
+    "#6d7892",
+    "#a896f0",
+    "#9a8fc0",
+    "#d2d2cd",
+]
+
+brights = [
+    "#5b606a",
+    "#f28b93",
+    "#b9c6e2",
+    "#e0c48a",
+    "#90a0b8",
+    "#c2b7ff",
+    "#bfb3e6",
+    "#ffffff",
+]

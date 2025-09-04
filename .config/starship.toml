@@ -1,6 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-palette = 'catppuccin_mocha'
+palette = 'canvas_dark'
 format = """\
 $username$hostname\
 $os\
@@ -123,3 +123,27 @@ surface0 = "#313244"
 base = "#1e1e2e"
 mantle = "#181825"
 crust = "#11111b"
+
+[palettes.canvas_dark]
+mantle  = "#0f1115"
+base    = "#141821"
+surface0= "#242a34"
+text    = "#d2d2cd"
+peach   = "#a896f0"
+lavender= "#c2b7ff"
+green   = "#a9b8d8"
+red     = "#e06c75"
+yellow  = "#d2b06b"
+sapphire= "#9a8fc0"
+
+[palettes.canvas_light]
+mantle  = "#f8f7f2"
+base    = "#efede6"
+surface0= "#d8d4cb"
+text    = "#2b2d33"
+peach   = "#6f60b0"
+lavender= "#7f73c8"
+green   = "#4f6a8f"
+red     = "#a64646"
+yellow  = "#9a7a3e"
+sapphire= "#8076b8"

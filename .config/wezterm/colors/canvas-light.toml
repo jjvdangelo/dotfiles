@@ -1,0 +1,33 @@
+# Canvas Light
+[colors]
+background = "#f8f7f2"
+foreground = "#2b2d33"
+cursor_bg = "#8076b8"
+cursor_border = "#8076b8"
+cursor_fg = "#f8f7f2"
+selection_bg = "#efede6"
+selection_fg = "#2b2d33"
+
+# scrollbar_thumb = "#d8d4cb"
+# split = "#d8d4cb"
+ansi = [
+    "#efede6",
+    "#a64646",
+    "#4f6a8f",
+    "#9a7a3e",
+    "#4b5a72",
+    "#6f60b0",
+    "#8076b8",
+    "#2b2d33",
+]
+
+brights = [
+    "#b8bbc2",
+    "#bf5959",
+    "#5d7aa6",
+    "#b08b4b",
+    "#6a7ea1",
+    "#7f73c8",
+    "#8f86c6",
+    "#3b3e45",
+]
