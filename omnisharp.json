@@ -1,0 +1,9 @@
+{
+    "MsBuild": {
+        "UseLegacySdkResolver": false
+    },
+
+    "Sdk": {
+        "IncludePrereleases": true
+    }
+}

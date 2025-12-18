@@ -40,3 +40,5 @@
 
 [includeIf "gitdir/i:C:/"]
 	path = ~/.config/git/config-windows
+[gpg]
+	program = C:\\Program Files (x86)\\GnuPG\\bin\\gpg.exe

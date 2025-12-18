@@ -1,21 +1,21 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
 palette = 'canvas_dark'
-format = """\
-$username$hostname\
+format = """
 $os\
+$username$hostname\
 $directory\
-[](bg:prev_bg fg:base)\
 $git_branch$git_status\
-$character"""
-right_format = """$git_state$git_metrics"""
+$character\
+"""
+right_format = """$git_branch$git_status"""
 continuation_prompt = '󰄾 '
 
 [username]
 show_always = true
-format = '[](sapphire)[$user]($style)'
-style_user = 'fg:mantle bg:sapphire'
-style_root = 'fg:red bg:sapphire'
+format = ' [$user]($style)'
+style_user = 'fg:chablis'
+style_root = 'fg:red'
 
 [hostname]
 ssh_only = false
@@ -24,15 +24,15 @@ format = '[(@$hostname)]($style)'
 
 [os]
 disabled = false
-style = "bg:surface0 fg:text"
-format = '[](bg:prev_bg fg:surface0)[$symbol]($style)'
+style = "fg:sapphire"
+format = '[ $symbol]($style)'
 
 [directory]
-style = "bg:peach fg:mantle"
+style = "fg:peach"
 read_only = " "
-truncation_length = 3
 truncation_symbol = "󰇘/"
-format = '[](bg:prev_bg fg:peach)[ $path ]($style)'
+truncate_to_repo = true
+format = '[ $path ]($style)[$read_only]($read_only_style)'
 
 [character]
 disabled = false
@@ -44,8 +44,8 @@ vimcmd_replace_symbol = '[](bold fg:lavender)'
 vimcmd_visual_symbol = '[](bold fg:yellow)'
 
 [git_branch]
-style = "bold lavender"
-format = '[ $symbol$branch(:$remote_branch) ]($style)'
+style = "sapphire"
+format = '[$symbol$branch(:$remote_branch) ]($style)'
 
 [os.symbols]
 Windows = ""
@@ -125,25 +125,27 @@ mantle = "#181825"
 crust = "#11111b"
 
 [palettes.canvas_dark]
-mantle  = "#0f1115"
-base    = "#141821"
-surface0= "#242a34"
-text    = "#d2d2cd"
-peach   = "#a896f0"
-lavender= "#c2b7ff"
-green   = "#a9b8d8"
-red     = "#e06c75"
-yellow  = "#d2b06b"
-sapphire= "#9a8fc0"
+mantle   = "#0f1115"
+base     = "#141821"
+surface0 = "#242a34"
+text     = "#d2d2cd"
+peach    = "#a896f0"
+lavender = "#c2b7ff"
+green    = "#a9b8d8"
+red      = "#e06c75"
+yellow   = "#d2b06b"
+sapphire = "#9a8fc0"
+chablis  = "#fff1f1"
 
 [palettes.canvas_light]
-mantle  = "#f8f7f2"
-base    = "#efede6"
-surface0= "#d8d4cb"
-text    = "#2b2d33"
-peach   = "#6f60b0"
-lavender= "#7f73c8"
-green   = "#4f6a8f"
-red     = "#a64646"
-yellow  = "#9a7a3e"
-sapphire= "#8076b8"
+mantle   = "#f8f7f2"
+base     = "#efede6"
+surface0 = "#d8d4cb"
+text     = "#2b2d33"
+peach    = "#6f60b0"
+lavender = "#7f73c8"
+green    = "#4f6a8f"
+red      = "#a64646"
+yellow   = "#9a7a3e"
+sapphire = "#8076b8"
+chablis  = "#fff1f1"

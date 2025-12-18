@@ -8,30 +8,24 @@ config.color_scheme = "canvas-dark"
 -- config.color_scheme = "alabaster-dark" -- ~/.config/wezterm/colors/alabaster-dark.toml
 -- config.color_scheme = "Catppuccin Mocha" -- built in
 
--- config.window_background_opacity = 0.99
--- config.text_background_opacity = 0.99
+config.window_background_opacity = 0.9
+config.text_background_opacity = 0.90
+config.window_padding = { left = 2, right = 2, top = 2, bottom = 2, }
 -- config.macos_window_background_blur = 10
-config.win32_system_backdrop = "Auto" -- Auto, Disable, Acrylic, Mica, Tabbed
 config.bold_brightens_ansi_colors = true
 config.window_decorations = "RESIZE"
 config.hide_tab_bar_if_only_one_tab = false
 config.tab_and_split_indices_are_zero_based = true
 config.scrollback_lines = 5000
-config.initial_cols = 120
-config.initial_rows = 48
+config.initial_cols = 240
+config.initial_rows = 96
 
--- Liked:
--- config.font = wezterm.font("M+CodeLat60 Nerd Font Mono", { weight = "DemiBold", italic = false })
--- config.font = wezterm.font("Agave Nerd Font Mono", { weight = "DemiBold", italic = false })
--- config.font = wezterm.font("Agave Nerd Font Mono", { italic = false })
---      config.font_size = 9.5
---      config.line_height = 1.1
 config.font = wezterm.font("M+1Code Nerd Font Mono", { weight = "Medium", italic = false })
-config.font_size = 9
+config.font_size = 8.5
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 
 config.audible_bell = "Disabled"
-config.visual_bell = { fade_in_duration_ms = 150, fade_out_duration_ms = 150, target = "CursorColor", }
+config.visual_bell = { fade_in_duration_ms = 350, fade_out_duration_ms = 350, target = "CursorColor", }
 
 -- keybindings
 config.leader = { key = "LeftShift", mods = "CTRL", timeout_milliseconds = 750 }
@@ -43,32 +37,38 @@ config.keys = {
 
 -- domain setup
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
-    wezterm.color_scheme_dirs = { os.getenv("USERPROFILE") .. "/.config/wezterm/colors" }
+    local userprofile = os.getenv "USERPROFILE"
 
-    config.wsl_domains = {
-        {
-            name = "WSL:Ubuntu",
-            distribution = "Ubuntu",
-            username = "jim",
-            default_cwd = "/home/jim",
-        },
-    }
+    config.win32_system_backdrop = "Mica" -- Auto, Disable, Acrylic, Mica, Tabbed
 
-    config.unix_domains = {
-        {
-            name = "wsl",
-            serve_command = { "wsl", "wezterm-mux-server", "--daemonize" },
-        },
-    }
+    wezterm.color_scheme_dirs = { userprofile .. "/.config/wezterm/colors" }
 
-    config.default_domain = "WSL:Ubuntu"
-    config.default_mux_server_domain = "WSL:Ubuntu"
-    config.default_cwd = "$HOME"
+    -- config.wsl_domains = {
+    --     {
+    --         name = "WSL:Ubuntu",
+    --         distribution = "Ubuntu",
+    --         username = "jim",
+    --         default_cwd = "/home/jim",
+    --     },
+    -- }
+
+    -- config.unix_domains = {
+    --     {
+    --         name = "wsl",
+    --         serve_command = { "wsl", "wezterm-mux-server", "--daemonize" },
+    --     },
+    -- }
+
+    -- config.default_domain = "WSL:Ubuntu"
+    -- config.default_mux_server_domain = "WSL:Ubuntu"
+    -- config.default_cwd = "$HOME"
+    config.default_prog = { "pwsh.exe", "-NoLogo" }
+    config.default_cwd = userprofile
     config.launch_menu = {
         {
             label = "PowerShell",
             args = { "/mnt/c/Program Files/PowerShell/7/pwsh.exe" },
-            cwd = "C:\\Users\\Jim",
+            cwd = userprofile,
         },
         {
             label = "WSL:Ubuntu",
