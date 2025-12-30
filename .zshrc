@@ -50,7 +50,13 @@ export EDITOR=nvim
 
 # ssh & gpg
 eval "$(ssh-agent -s)" >>/dev/null
-export GPG_TTY=$TTY
+export GPG_TTY=$(tty)
+
+# dotnet
+typeset dotnet_cmd=$(whence -p dotnet)
+if [[ -x $dotnet_cmd ]]; then
+    export DOTNET_ROOT=$(dirname ${dotnet_cmd})
+fi
 
 # qol
 ## vi mode
