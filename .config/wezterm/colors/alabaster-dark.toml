@@ -1,31 +1,61 @@
-# Alabaster
+[metadata]
+name = "Alabaster Dark"
+
 [colors]
-foreground = "#cecece"
-background = "#0e1415"
-cursor_bg = "#cd974b"
+foreground = "#cecece"   # s:fg_main
+background = "#0e1415"   # s:bg_main"
+
+cursor_bg = "#cd974b"    # s:gold
+cursor_fg = "#0e1415"    # s:bg_main
 cursor_border = "#cd974b"
-cursor_fg = "#0e1415"
-selection_bg = "#293334"
-selection_fg = "#cecece"
+
+selection_fg = "#cecece" # s:fg_main
+selection_bg = "#293334" # s:bg_dark
+
+split = "#708b8d"        # s:fg_grey
+scrollbar_thumb = "#1a1f20" # s:bg_highlight
 
 ansi = [
-    "#000000",
-    "#d2322d",
-    "#6abf40",
-    "#cd974b",
-    "#217EBC",
-    "#9B3596",
-    "#178F79",
-    "#cecece"
+  "#0e1415", # black   (bg_main)
+  "#cc8bc9", # red     (using pink_muted; theme doesn't define a true red)
+  "#95cb82", # green   (green_muted)
+  "#cd974b", # yellow  (gold)
+  "#71ade7", # blue    (blue_light)
+  "#cc8bc9", # magenta (pink_muted)
+  "#00d7ff", # cyan    (blue_bright)
+  "#cecece", # white   (fg_main)
 ]
 
 brights = [
-    "#333333",
-    "#c33c33",
-    "#95cb82",
-    "#dfdf8e",
-    "#71aed7",
-    "#cc8bc9",
-    "#47BEA9",
-    "#ffffff"
+  "#505050", # bright black   (fg_grey_dim)
+  "#cc8bc9", # bright red     (pink_muted)
+  "#95cb82", # bright green   (green_muted)
+  "#dfdf8e", # bright yellow  (yellow_beige)
+  "#71ade7", # bright blue    (blue_light)
+  "#cc8bc9", # bright magenta (pink_muted)
+  "#00d7ff", # bright cyan    (blue_bright)
+  "#cecece", # bright white   (fg_main)
 ]
+
+[colors.tab_bar]
+background = "#0e1415" # bg_main
+
+[colors.tab_bar.active_tab]
+bg_color = "#0e1415"   # bg_main
+fg_color = "#cecece"   # fg_main
+
+[colors.tab_bar.inactive_tab]
+bg_color = "#1a1f20"   # bg_highlight
+fg_color = "#708b8d"   # fg_grey
+
+[colors.tab_bar.inactive_tab_hover]
+bg_color = "#293334"   # bg_dark
+fg_color = "#cecece"   # fg_main
+
+[colors.tab_bar.new_tab]
+bg_color = "#1a1f20"   # bg_highlight
+fg_color = "#708b8d"   # fg_grey
+
+[colors.tab_bar.new_tab_hover]
+bg_color = "#293334"   # bg_dark
+fg_color = "#cecece"   # fg_main

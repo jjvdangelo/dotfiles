@@ -4,9 +4,7 @@ local config = wezterm.config_builder()
 config.automatically_reload_config = true
 config.check_for_updates = true
 
-config.color_scheme = "canvas-dark"
--- config.color_scheme = "alabaster-dark" -- ~/.config/wezterm/colors/alabaster-dark.toml
--- config.color_scheme = "Catppuccin Mocha" -- built in
+config.color_scheme = "Alabaster Dark"
 
 config.window_background_opacity = 0.9
 config.text_background_opacity = 0.90
@@ -21,47 +19,23 @@ config.initial_cols = 240
 config.initial_rows = 96
 
 config.font = wezterm.font("M+1Code Nerd Font Mono", { weight = "Medium", italic = false })
-config.font_size = 8.5
+config.font_size = 7.5
 config.harfbuzz_features = { "calt=0", "clig=0", "liga=0" }
 
 config.audible_bell = "Disabled"
 config.visual_bell = { fade_in_duration_ms = 350, fade_out_duration_ms = 350, target = "CursorColor", }
 
--- keybindings
 config.leader = { key = "LeftShift", mods = "CTRL", timeout_milliseconds = 750 }
-
 config.keys = {
     -- Just keeping this here for now as an example.
     { key = "T", mods = "LEADER", action = wezterm.action.SpawnTab "CurrentPaneDomain" },
 }
 
--- domain setup
 if wezterm.target_triple == "x86_64-pc-windows-msvc" then
     local userprofile = os.getenv "USERPROFILE"
-
     config.win32_system_backdrop = "Mica" -- Auto, Disable, Acrylic, Mica, Tabbed
-
     wezterm.color_scheme_dirs = { userprofile .. "/.config/wezterm/colors" }
 
-    -- config.wsl_domains = {
-    --     {
-    --         name = "WSL:Ubuntu",
-    --         distribution = "Ubuntu",
-    --         username = "jim",
-    --         default_cwd = "/home/jim",
-    --     },
-    -- }
-
-    -- config.unix_domains = {
-    --     {
-    --         name = "wsl",
-    --         serve_command = { "wsl", "wezterm-mux-server", "--daemonize" },
-    --     },
-    -- }
-
-    -- config.default_domain = "WSL:Ubuntu"
-    -- config.default_mux_server_domain = "WSL:Ubuntu"
-    -- config.default_cwd = "$HOME"
     config.default_prog = { "pwsh.exe", "-NoLogo" }
     config.default_cwd = userprofile
     config.launch_menu = {
