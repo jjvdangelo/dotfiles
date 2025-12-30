@@ -1,6 +1,6 @@
 return {
     {
-        "p00f/alabaster.nvim",
+        "sderev/alabaster.vim",
 
         name = "alabaster",
 
@@ -10,13 +10,13 @@ return {
         opts = {},
 
         config = function(_, opts)
-            -- vim.o.termguicolors = true
-            -- vim.o.background = "dark"
+            vim.o.termguicolors = true
+            vim.o.background = "dark"
 
-            -- vim.cmd "highlight clear"
-            -- vim.cmd "syntax reset"
+            vim.cmd "highlight clear"
+            vim.cmd "syntax reset"
 
-            -- vim.cmd.colorscheme "alabaster"
+            vim.cmd.colorscheme "alabaster-dark"
         end,
     },
 }

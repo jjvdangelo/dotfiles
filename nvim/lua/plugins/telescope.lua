@@ -11,7 +11,6 @@ return {
             "nvim-lua/plenary.nvim",
             "jonarrien/telescope-cmdline.nvim",
             "nvim-telescope/telescope-fzf-native.nvim",
-            "nvim-telescope/telescope-dap.nvim",
             "nvim-telescope/telescope-ui-select.nvim",
         },
 
@@ -23,7 +22,6 @@ return {
 
             ts.load_extension("ui-select")
             ts.load_extension("cmdline")
-            ts.load_extension("dap")
 
             k.nmap("<leader>f", tele.live_grep, "live grep")
             k.nmap("<leader>ff", tele.find_files, "find files")

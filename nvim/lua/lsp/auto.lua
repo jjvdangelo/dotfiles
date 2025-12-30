@@ -63,8 +63,6 @@ local function resolve_root(cfg, name)
 end
 
 function M.start()
-    log.info("starting")
-
     load_all()
 
     local ft = vim.bo.filetype

@@ -1,6 +1,6 @@
 local util = require "lspconfig.util"
 local home = vim.loop.os_homedir()
-local exe = vim.fs.joinpath(home, ".local", "bin", "lua-language-server")
+local exe = vim.fs.joinpath(home, ".local", "lua-language-server", "bin", "lua-language-server")
 
 return {
     name = "lua_ls",
